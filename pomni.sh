@@ -11,19 +11,6 @@ progsfile="https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/progs
 # Sanitize potential stray CRLF and quotes in program names
 program="$(echo "$program" | tr -d '\r' | tr -d '"')"
 
-export NEWT_COLORS="
-root=,blue
-window=,black
-shadow=,blue
-border=blue,black
-title=blue,black
-textbox=blue,black
-radiolist=black,black
-label=black,blue
-checkbox=black,blue
-compactbutton=black,blue
-button=black,red"
-
 max() {
 	echo -e "$1\n$2" | sort -n | tail -1
 }

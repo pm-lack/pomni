@@ -2,35 +2,30 @@
 set -e
 
 progsfile="https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/progs.csv"
-tmpfile=$(mktemp)
 
-# Build a temporary checklist file (one line per item)
-curl -Ls "$progsfile" | sed '/^#/d;/^$/d' | while IFS=, read -r tag program comment; do
+# Download CSV
+tmpcsv=$(mktemp)
+curl -Ls "$progsfile" | sed '/^#/d;/^$/d' > "$tmpcsv"
+
+# Build dialog checklist items
+items=()
+while IFS=, read -r tag program comment; do
     [[ -z "$program" ]] && continue
     if [[ "$tag" == "A" || -z "$tag" ]]; then
-        # Short description (30 chars) to prevent wrapping
-        desc=$(echo "$comment" | cut -c1-30)
-        # Write: tag description OFF
-        echo "$program \"$desc\" OFF" >> "$tmpfile"
+        # Shorten description to avoid wrapping issues
+        desc=$(echo "$comment" | cut -c1-50)
+        items+=("$program" "$desc" "off")
     fi
-done
+done < "$tmpcsv"
 
-# Build arguments from temp file
-args=()
-while read -r line; do
-    # Split line into three fields
-    name=$(echo "$line" | awk '{print $1}')
-    desc=$(echo "$line" | awk -F\" '{print $2}')
-    args+=("$name" "$desc" "OFF")
-done < "$tmpfile"
+# Show dialog checklist
+chosen=$(dialog --title "Select Browsers to Install" \
+    --checklist "Use SPACE to select, ENTER to confirm:" 25 80 15 \
+    "${items[@]}" 3>&1 1>&2 2>&3)
 
-# Show checklist
-chosen=$(whiptail --title "Choose Browsers to Install" \
-    --checklist "Select browsers:" 25 80 15 \
-    "${args[@]}" 3>&1 1>&2 2>&3) || exit 1
-
-# Cleanup
-rm "$tmpfile"
+# Clean up
+rm "$tmpcsv"
+clear
 
 # Remove quotes
 chosen=$(echo "$chosen" | tr -d '"')

@@ -1,7 +1,6 @@
 #!/bin/bash
-# Browser Installer from progs.csv (names only)
+# Browser Installer from progs.csv (names only, clean layout)
 # Author: pm
-# License: GNU GPLv3
 
 set -e
 export TERM=ansi
@@ -13,34 +12,34 @@ tmpcsv="/tmp/progs.csv"
 # Download CSV and remove comments
 curl -Ls "$progsfile" | sed '/^#/d' > "$tmpcsv"
 
-# Function to install an AUR package
-aurinstall() {
-    sudo $aurhelper -S --noconfirm "$1"
-}
-
-# Build flattened checklist arguments
-checklist_args=()
+# Extract only browser names (AUR type) into a temporary checklist file
+checklistfile="/tmp/browser_checklist.txt"
+> "$checklistfile"
 while IFS=, read -r tag program comment; do
-    [ "$tag" != "A" ] && continue  # only AUR browsers
-    checklist_args+=("$program" " " "OFF") # tag, description, status
+    [ "$tag" != "A" ] && continue
+    echo "$program OFF" >> "$checklistfile"
 done < "$tmpcsv"
 
-# Show checklist
-selected=$(whiptail --title "Browser Selection" --checklist \
-    "Select the browser(s) you want to install:" 20 60 15 \
-    "${checklist_args[@]}" 3>&1 1>&2 2>&3) || exit 0
+# Build whiptail command dynamically
+cmd=(whiptail --title "Browser Selection" --checklist "Select browsers to install:" 20 60 15)
+while read -r line; do
+    browser=$(echo "$line" | awk '{print $1}')
+    status=$(echo "$line" | awk '{print $2}')
+    cmd+=("$browser" "" "$status")
+done < "$checklistfile"
 
-# Cleanup quotes
+# Show checklist
+selected=$("${cmd[@]}" 3>&1 1>&2 2>&3) || exit 0
 selected=$(echo "$selected" | tr -d '"')
 
 # Install selected browsers
 if [ -n "$selected" ]; then
     for browser in $selected; do
         echo "Installing $browser..."
-        aurinstall "$browser"
+        sudo $aurhelper -S --noconfirm "$browser"
     done
 else
     echo "No browsers selected. Exiting."
 fi
 
-echo "Done!"
+echo "All done!"

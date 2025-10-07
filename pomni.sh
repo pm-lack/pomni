@@ -2,29 +2,35 @@
 set -e
 
 progsfile="https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/progs.csv"
+tmpfile=$(mktemp)
 
-# Download CSV to temp file
-tmpcsv=$(mktemp)
-curl -Ls "$progsfile" | sed '/^#/d;/^$/d' > "$tmpcsv"
-
-# Build options array for whiptail
-options_array=()
-while IFS=, read -r tag program comment; do
+# Build a temporary checklist file (one line per item)
+curl -Ls "$progsfile" | sed '/^#/d;/^$/d' | while IFS=, read -r tag program comment; do
     [[ -z "$program" ]] && continue
     if [[ "$tag" == "A" || -z "$tag" ]]; then
-        # Shorten description
-        desc=$(echo "$comment" | cut -c1-40)
-        options_array+=("$program" "$desc" "OFF")
+        # Short description (30 chars) to prevent wrapping
+        desc=$(echo "$comment" | cut -c1-30)
+        # Write: tag description OFF
+        echo "$program \"$desc\" OFF" >> "$tmpfile"
     fi
-done < "$tmpcsv"
+done
 
-# Interactive checklist
+# Build arguments from temp file
+args=()
+while read -r line; do
+    # Split line into three fields
+    name=$(echo "$line" | awk '{print $1}')
+    desc=$(echo "$line" | awk -F\" '{print $2}')
+    args+=("$name" "$desc" "OFF")
+done < "$tmpfile"
+
+# Show checklist
 chosen=$(whiptail --title "Choose Browsers to Install" \
-    --checklist "Select the browsers you want to install:" 20 78 12 \
-    "${options_array[@]}" 3>&1 1>&2 2>&3) || exit 1
+    --checklist "Select browsers:" 25 80 15 \
+    "${args[@]}" 3>&1 1>&2 2>&3) || exit 1
 
-# Clean up
-rm "$tmpcsv"
+# Cleanup
+rm "$tmpfile"
 
 # Remove quotes
 chosen=$(echo "$chosen" | tr -d '"')

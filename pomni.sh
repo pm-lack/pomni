@@ -4,9 +4,11 @@
 # by pm-lackthereof.xyz
 # License: GNU GPLv3
 
+aurhelper="yay"
 # Load program list from CSV
 progsfile="https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/progs.csv"
-aurhelper="yay"
+
+# Sanitize potential stray CRLF and quotes in program names
 program="$(echo "$program" | tr -d '\r' | tr -d '"')"
 
 export NEWT_COLORS="
@@ -38,6 +40,7 @@ replicate() {
 	done
 	echo "$str"
 }
+
 programchoices() {
 	choices=()
 	local maxlen
@@ -59,6 +62,8 @@ programchoices() {
 		fi
 	done
 }
+
+# Shows a whiptail checklist window and captures selected items
 selectedprograms() {
 	result=$(
 		# Creates the whiptail checklist. Also, we use a nifty
@@ -69,6 +74,7 @@ selectedprograms() {
 			3>&2 2>&1 1>&3
 	)
 }
+
 exitorinstall() {
 	local exitstatus="$?"
 	# Check the exit status, if 0 we will install the selected

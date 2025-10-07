@@ -18,11 +18,16 @@ aurinstall() {
 	$aurhelper -S --noconfirm "$1" >/dev/null 2>&1
 }
 
-# Fetch browsers from CSV and build checklist items
 fetch_browsers() {
-	curl -Ls "$progsfile" | sed '/^#/d;/^$/d' | awk -F, '
-		$1=="A" || $1=="" {printf "\"%s\" \"%s\" OFF ", $2, $3}
-	'
+	curl -Ls "$progsfile" | sed '/^#/d;/^$/d' | while IFS=, read -r tag program comment; do
+		[ -z "$program" ] && continue
+		# Only include browsers (tag A or empty)
+		if [ "$tag" = "A" ] || [ -z "$tag" ]; then
+			# Escape quotes in description
+			comment=$(echo "$comment" | sed 's/"/\\"/g')
+			printf '"%s" "%s" OFF ' "$program" "$comment"
+		fi
+	done
 }
 
 # Main interactive loop

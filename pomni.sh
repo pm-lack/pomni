@@ -23,9 +23,9 @@ fetch_browsers() {
 		[ -z "$program" ] && continue
 		# Only include browsers (tag A or empty)
 		if [ "$tag" = "A" ] || [ -z "$tag" ]; then
-			# Escape quotes in description
-			comment=$(echo "$comment" | sed 's/"/\\"/g')
-			printf '"%s" "%s" OFF ' "$program" "$comment"
+			# Shorten description to ~40 chars for whiptail display
+			desc=$(echo "$comment" | sed 's/"/\\"/g' | cut -c1-40)
+			printf '"%s" "%s" OFF ' "$program" "$desc"
 		fi
 	done
 }

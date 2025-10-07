@@ -16,15 +16,9 @@ browser_entries=()
 
 # Read the CSV and extract programs tagged with "B"
 while IFS=, read -r tag program comment; do
-	# Strip surrounding quotes from comment, if any
-	echo "$comment" | grep -q "^\".*\"$" &&
-		comment="$(echo "$comment" | sed -E "s/(^\"|\"$)//g")"
-
 	if [[ "$tag" == "B" ]]; then
-		# The 'install' function takes alternating key/value arguments
-		# Here we pass: "key" "value", where key=program name, value=display name or fallback to program name
-		displayname="${comment:-$program}"
-		browser_entries+=("$program" "$displayname")
+		# Add program name twice (key and value)
+		browser_entries+=("$program" "$program")
 	fi
 done </tmp/progs.csv
 

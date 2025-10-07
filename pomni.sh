@@ -119,3 +119,30 @@ done </tmp/progs.csv
 install "Web Browsers" \
 	"Select one or more web browsers to install.\nNon-binaries will need time to compile." \
 	"${browsers[@]}"
+
+# Rebuild font cache
+fc-cache -fv
+
+# Host blocker
+curl -LO https://raw.githubusercontent.com/pm-lack/hosts/refs/heads/master/hosts
+cat ./hosts >> /etc/hosts
+rm -f ./hosts
+
+# Check for NVIDIA GPU and install NVIDIA drivers
+if lspci | grep -E "VGA|3D" | grep -q "NVIDIA"; then
+  yay -S --noconfirm nvidia-dkms
+
+  grubfile="/etc/default/grub"
+
+  # Only add the parameter if it's not already present
+  if ! grep -q "nvidia-drm.modeset=1" "$grubfile"; then
+    # Use sed to append inside the quotes of GRUB_CMDLINE_LINUX_DEFAULT
+    sudo sed -i 's/^\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 nvidia-drm.modeset=1"/' "$grubfile"
+    echo "Added 'nvidia-drm.modeset=1' to GRUB_CMDLINE_LINUX_DEFAULT."
+
+    # Regenerate grub config (common for Arch-based systems)
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+  else
+    echo "'nvidia-drm.modeset=1' already present in GRUB_CMDLINE_LINUX_DEFAULT."
+  fi
+fi

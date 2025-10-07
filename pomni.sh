@@ -1,5 +1,5 @@
 #!/bin/bash
-# Browser Installer from progs.csv
+# Browser Installer from progs.csv (names only)
 # Author: pm
 # License: GNU GPLv3
 
@@ -18,14 +18,11 @@ aurinstall() {
     sudo $aurhelper -S --noconfirm "$1"
 }
 
-# Build checklist for whiptail
+# Build checklist with names only
 checklist_items=()
 while IFS=, read -r tag program comment; do
-    [ "$tag" != "A" ] && continue # only AUR browsers
-    # Remove quotes, compress spaces
-    clean_comment=$(echo "$comment" | sed 's/^"//;s/"$//;s/  */ /g')
-    # Append properly: tag description OFF
-    checklist_items+=("$program" "$clean_comment" "OFF")
+    [ "$tag" != "A" ] && continue  # only AUR browsers
+    checklist_items+=("$program" "" "OFF")
 done < "$tmpcsv"
 
 # Show checklist
@@ -38,8 +35,7 @@ selected=$(echo "$selected" | tr -d '"')
 
 # Install selected browsers
 for browser in $selected; do
-    comment=$(awk -F, -v b="$browser" '$2==b {gsub(/"/,"",$3); print $3}' "$tmpcsv")
-    echo "Installing $browser - $comment..."
+    echo "Installing $browser..."
     aurinstall "$browser"
 done
 

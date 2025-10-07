@@ -16,8 +16,14 @@ browser_entries=()
 
 # Read the CSV and extract programs tagged with "B"
 while IFS=, read -r tag program comment; do
+	# Skip empty or malformed lines
+	[[ -z "$tag" || -z "$program" ]] && continue
+
+	# Clean up stray quotes and whitespace
+	tag="${tag//\"/}"
+	program="$(echo "$program" | tr -d '\r' | tr -d '"')"
+
 	if [[ "$tag" == "B" ]]; then
-		# Add program name twice (key and value)
 		browser_entries+=("$program" "$program")
 	fi
 done </tmp/progs.csv

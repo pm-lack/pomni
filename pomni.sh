@@ -18,25 +18,29 @@ aurinstall() {
     sudo $aurhelper -S --noconfirm "$1"
 }
 
-# Build checklist with names only
-checklist_items=()
+# Build flattened checklist arguments
+checklist_args=()
 while IFS=, read -r tag program comment; do
     [ "$tag" != "A" ] && continue  # only AUR browsers
-    checklist_items+=("$program" "" "OFF")
+    checklist_args+=("$program" " " "OFF") # tag, description, status
 done < "$tmpcsv"
 
 # Show checklist
 selected=$(whiptail --title "Browser Selection" --checklist \
-    "Select the browser(s) you want to install:" 20 78 12 \
-    "${checklist_items[@]}" 3>&1 1>&2 2>&3) || exit 0
+    "Select the browser(s) you want to install:" 20 60 15 \
+    "${checklist_args[@]}" 3>&1 1>&2 2>&3) || exit 0
 
 # Cleanup quotes
 selected=$(echo "$selected" | tr -d '"')
 
 # Install selected browsers
-for browser in $selected; do
-    echo "Installing $browser..."
-    aurinstall "$browser"
-done
+if [ -n "$selected" ]; then
+    for browser in $selected; do
+        echo "Installing $browser..."
+        aurinstall "$browser"
+    done
+else
+    echo "No browsers selected. Exiting."
+fi
 
-echo "All selected browsers installed!"
+echo "Done!"

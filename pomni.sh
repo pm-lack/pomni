@@ -124,5 +124,5 @@ done </tmp/progs.csv
 
 # Call the install function with dynamically loaded browser list
 install "Web Browsers" \
-	"Select one or more web browsers to install.\nAll programs marked with '*' are already installed.\nUnselecting them will NOT uninstall them." \
+	"Select one or more web browsers to install.\nNon-binaries will need time to compile." \
 	"${browsers[@]}"

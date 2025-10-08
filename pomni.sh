@@ -146,3 +146,6 @@ if lspci | grep -E "VGA|3D" | grep -q "NVIDIA"; then
     echo "'nvidia-drm.modeset=1' already present in GRUB_CMDLINE_LINUX_DEFAULT."
   fi
 fi
+
+# Empty tmp
+rm -rf /tmp/*

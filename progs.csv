@@ -4,3 +4,4 @@
 ,libxinerama,""
 ,xorg-xinit,""
 ,libxft,""
+,harfbuzz,""

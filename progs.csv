@@ -1,0 +1,5 @@
+#TAG,NAME IN REPO (or git url),PURPOSE (should be a verb phrase to sound right while installing)
+,xlibre-server,"is the graphical server. This first one may take a while as it pulls many other dependencies first on clean installs."
+,xlibre-xserver-common,""
+,libxinerama,""
+,xorg-xinit,""

@@ -3,3 +3,4 @@
 ,xlibre-xserver-common,""
 ,libxinerama,""
 ,xorg-xinit,""
+,libxft,""

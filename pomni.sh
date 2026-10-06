@@ -306,4 +306,3 @@ whiptail \
 	--msgbox \
 	"Everything is done!\n\nUser: $name\nShell: Zsh\nSudo: wheel (passwordless)\n\nYou can now log in as $name." \
 	12 60
-```

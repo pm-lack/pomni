@@ -238,7 +238,7 @@ export TERMINAL="st"
 export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
 export MOZ_USE_XINPUT2=1                  # Mozilla smooth scrolling/touchpads.
 # Start graphical server on user's current tty if not already running.
-[ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
+#[ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
 EOF
 chsh -s /bin/zsh "$name" >/dev/null 2>&1
 

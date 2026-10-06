@@ -13,7 +13,7 @@ TMPDIR=$(mktemp -d) || exit 1
 trap 'rm -rf "$TMPDIR"' EXIT
 
 # Install git and zsh
-pacman -S --needed git zsh || exit 1
+pacman -S --needed --noconfirm git zsh || exit 1
 
 # User creation
 printf 'Username: '

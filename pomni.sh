@@ -72,7 +72,7 @@ if id -u "$name" >/dev/null 2>&1; then
 		--no-button "No wait..." \
 		--yesno \
 		"The user \`$name\` already exists on this system. Delete \`$name\` and continue?" \
-		8 45
+		9 50
 	then
 		exit 0
 	fi

@@ -230,6 +230,75 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 EOF
 chsh -s /bin/zsh "$name" >/dev/null 2>&1
 
+# XLibre
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Setting up XLibre..." \
+	8 50
+
+# Download XLibre signing key
+curl -fsSL \
+	-o "$TMPDIR/xlibre-artixlinux.asc" \
+	https://xlibre-artix.github.io/xlibre-artixlinux.asc || {
+	whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to download the XLibre signing key." \
+		8 60
+	exit 1
+}
+
+# Add XLibre signing key
+pacman-key --add "$TMPDIR/xlibre-artixlinux.asc" || {
+	whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to add the XLibre signing key." \
+		8 60
+	exit 1
+}
+
+# Locally sign XLibre signing key
+pacman-key --lsign-key 2AFFCD7B42ADD2E7 || {
+	whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to locally sign the XLibre signing key." \
+		8 60
+	exit 1
+}
+
+# Add XLibre repository
+if ! grep -q '^\[xlibre-stable\]' /etc/pacman.conf; then
+	sed -i '/^\[world\]/i [xlibre-stable]\nServer = https://github.com/xlibre-artix/stable/releases/download/$arch\n' /etc/pacman.conf
+fi
+
+# Refresh package databases and upgrade
+pacman -Syyu --noconfirm || {
+	whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to update the package databases." \
+		8 60
+	exit 1
+}
+
+# Install XLibre
+pacman -S --needed --noconfirm xlibre-meta || {
+	whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to install XLibre." \
+		8 60
+	exit 1
+}
+
 # Finished
 whiptail \
 	--title "Installation Complete" \

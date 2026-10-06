@@ -68,10 +68,10 @@ if id -u "$name" >/dev/null 2>&1; then
 	if ! whiptail \
 		--title "WARNING" \
 		--fullbuttons \
-		--yes-button "CONTINUE" \
+		--yes-button "Yes" \
 		--no-button "No wait..." \
 		--yesno \
-		"The user \`$name\` already exists on this system. The installer can install for an existing user, but it may OVERWRITE conflicting settings or dotfiles on the account.\n\nThe installer will NOT overwrite your personal files, documents, videos, etc.\n\nIt will also change $name's password to the one you provide.\n\nContinue?" \
+		"The user \`$name\` already exists on this system. Delete \`$name\` and continue?\n\nContinue?" \
 		14 70
 	then
 		exit 0

@@ -319,6 +319,7 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
+sleep 1
 pacman -S --needed --noconfirm libxinerama libxft >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \

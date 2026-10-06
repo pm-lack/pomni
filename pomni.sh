@@ -15,16 +15,37 @@ trap 'rm -rf "$TMPDIR"' EXIT
 # Install whiptail
 pacman -S --needed --noconfirm libnewt || exit 1
 
+# Whiptail colors
+export NEWT_COLORS='
+root=white,black
+window=white,black
+border=white,black
+shadow=black,black
+title=white,black
+button=black,white
+actbutton=white,blue
+compactbutton=black,white
+checkbox=white,black
+actcheckbox=white,blue
+entry=white,black
+label=white,black
+listbox=white,black
+actlistbox=white,blue
+textbox=white,black
+helpline=white,black
+roottext=white,black
+'
+
 # Welcome
 whiptail --title "pm's Optimized Minimal Nest Installer" \
 	--msgbox \
-	"Welcome!\n\nThis installer will create your user account and configure a minimal Zsh environment." \
+	"Welcome!\n\nThis installer will create or configure your user account and install a minimal Zsh environment." \
 	10 60
 
 # User creation
 name=$(whiptail \
 	--title "User Creation" \
-	--inputbox "Enter the username to create:" \
+	--inputbox "Enter the username to create or configure:" \
 	10 60 \
 	3>&1 1>&2 2>&3) || exit 1
 
@@ -36,10 +57,17 @@ if [ -z "$name" ]; then
 fi
 
 # Check whether the user already exists
-if id "$name" >/dev/null 2>&1; then
-	whiptail --title "Error" \
-		--msgbox "The user \`$name\` already exists on this system." 8 60
-	exit 1
+if id -u "$name" >/dev/null 2>&1; then
+	if ! whiptail \
+		--title "WARNING" \
+		--yes-button "CONTINUE" \
+		--no-button "No wait..." \
+		--yesno \
+		"The user \`$name\` already exists on this system. The installer can install for an existing user, but it may OVERWRITE conflicting settings or dotfiles on the account.\n\nThe installer will NOT overwrite your personal files, documents, videos, etc.\n\nIt will also change $name's password to the one you provide.\n\nContinue?" \
+		14 70
+	then
+		exit 0
+	fi
 fi
 
 # Password
@@ -80,19 +108,30 @@ pacman -S --needed --noconfirm git zsh || {
 	exit 1
 }
 
-# Create user
-useradd -m -s /bin/zsh "$name" || {
+# Create user if necessary
+if ! id -u "$name" >/dev/null 2>&1; then
+	useradd -m -s /bin/zsh "$name" || {
+		whiptail --title "Error" \
+			--msgbox "Failed to create user $name." 8 50
+		exit 1
+	}
+fi
+
+# Make sure the user has Zsh
+usermod -s /bin/zsh "$name" || {
 	whiptail --title "Error" \
-		--msgbox "Failed to create user $name." 8 50
+		--msgbox "Failed to set Zsh as $name's shell." 8 50
 	exit 1
 }
 
+# Add user to wheel
 usermod -aG wheel "$name" || {
 	whiptail --title "Error" \
 		--msgbox "Failed to add $name to the wheel group." 8 50
 	exit 1
 }
 
+# Set password
 printf '%s:%s\n' "$name" "$password" | chpasswd || {
 	whiptail --title "Error" \
 		--msgbox "Failed to set the user's password." 8 50
@@ -104,34 +143,4 @@ unset password
 # Sudo fix
 printf '%s\n' '%wheel ALL=(ALL) NOPASSWD: ALL' \
 	>/etc/sudoers.d/wheel
-
 chmod 440 /etc/sudoers.d/wheel
-
-# Install zsh-autosuggestions
-whiptail --title "Installing" \
-	--infobox "Installing zsh-autosuggestions..." 8 50
-
-mkdir -p "/home/$name/.local/share/zsh/plugins"
-
-git clone --depth 1 \
-	https://github.com/zsh-users/zsh-autosuggestions.git \
-	"$TMPDIR/zsh-autosuggestions" || {
-		whiptail --title "Error" \
-			--msgbox "Failed to download zsh-autosuggestions." 8 60
-		exit 1
-	}
-
-cp "$TMPDIR/zsh-autosuggestions/zsh-autosuggestions.zsh" \
-	"/home/$name/.local/share/zsh/plugins/" || {
-		whiptail --title "Error" \
-			--msgbox "Failed to install zsh-autosuggestions." 8 60
-		exit 1
-	}
-
-chown -R "$name:$name" "/home/$name/.local/share/zsh"
-
-# Finished
-whiptail --title "Installation Complete" \
-	--msgbox \
-	"pm's Optimized Minimal Nest Installer has finished successfully.\n\nUser: $name\nShell: Zsh\nSudo: wheel (passwordless)\n\nYou can now log in as $name." \
-	12 65

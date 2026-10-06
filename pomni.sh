@@ -316,7 +316,7 @@ pacman -S --needed --noconfirm xlibre-meta >/dev/null 2>&1 || {
 whiptail \
 	--title "Installing" \
 	--infobox \
-	"Setting up XLibre..." \
+	"Setting up X dependencies..." \
 	8 50
 
 pacman -S --needed --noconfirm libxinerama libxft >/dev/null 2>&1 || {

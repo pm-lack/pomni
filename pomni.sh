@@ -199,6 +199,36 @@ printf '%s\n' '%wheel ALL=(ALL) NOPASSWD: ALL' \
 	>/etc/sudoers.d/wheel
 chmod 440 /etc/sudoers.d/wheel
 
+# Zsh config
+sudo -u "$name" mkdir -p "$home/.config/zsh"
+sudo -u "$name" sh -c 'printf "%s\n" '\''export ZDOTDIR="$HOME/.config/zsh"'\'' > "$HOME/.zshenv"'
+sudo -u "$name" sh -c 'printf "%s\n" '\''
+# Enable colors and change prompt:
+autoload -U colors && colors	# Load colors
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+
+# History in cache directory:
+HISTSIZE=10000000
+SAVEHIST=10000000
+HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/history"
+setopt inc_append_history
+
+# Basic auto/tab complete:
+autoload -U compinit
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)		# Include hidden files.
+
+# Alias
+alias ll='ls -lah'
+
+# Load syntax highlighting; should be last.
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
+'\'' > "$HOME/.config/zsh/.zshrc"'
+chsh -s /bin/zsh "$name" >/dev/null 2>&1
+chsh -s /bin/zsh "$name" >/dev/null 2>&1
+
 # Finished
 whiptail \
 	--title "Installation Complete" \

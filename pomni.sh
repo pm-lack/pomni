@@ -341,6 +341,7 @@ sleep 1
 if ! grep -q '^\[lib32\]' /etc/pacman.conf; then
 	sed -i '/^\[galaxy\]/i [lib32]\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf
 fi
+pacman -Syyu --noconfirm >/dev/null 2>&1 || {
 
 # Finished
 whiptail \

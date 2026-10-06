@@ -200,6 +200,7 @@ printf '%s\n' '%wheel ALL=(ALL) NOPASSWD: ALL' \
 chmod 440 /etc/sudoers.d/wheel
 
 # Zsh config
+sudo -u "$name" mkdir -p "$home/.local/bin"
 sudo -u "$name" mkdir -p "$home/.config/zsh"
 sudo -u "$name" sh -c 'cat > "$HOME/.zshenv"' <<'EOF'
 export ZDOTDIR="$HOME/.config/zsh"

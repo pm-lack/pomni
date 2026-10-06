@@ -324,7 +324,7 @@ pacman -S --needed --noconfirm libxinerama libxft xorg-xinit >/dev/null 2>&1 || 
 		--title "Error" \
 		--fullbuttons \
 		--msgbox \
-		"Failed to install XLibre." \
+		"Failed to install X dependencies." \
 		8 60
 	exit 1
 }
@@ -349,6 +349,14 @@ if ! grep -q '^\[lib32\]' /etc/pacman.conf; then
 	sed -i '/^\[galaxy\]/i [lib32]\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf
 fi
 pacman -Syyu --noconfirm >/dev/null 2>&1 || {
+whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to add Lib32." \
+		8 60
+	exit 1
+}
 
 # Finished
 whiptail \

@@ -299,6 +299,23 @@ pacman -S --needed --noconfirm xlibre-meta || {
 	exit 1
 }
 
+# X dependencies 
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Setting up XLibre..." \
+	8 50
+
+pacman -S --needed --noconfirm libxinerama libxft || {
+	whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to install XLibre." \
+		8 60
+	exit 1
+}
+
 # Finished
 whiptail \
 	--title "Installation Complete" \

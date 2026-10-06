@@ -41,7 +41,7 @@ whiptail \
 	--title "pm's Optimized Minimal Nest Installer" \
 	--fullbuttons \
 	--msgbox \
-	"Welcome!\n\nWIP Artix/Arch bootstrapper. This installer will create or configure your user account and install a minimal Zsh environment." \
+	"Welcome!\n\nWIP Artix/Arch bootstrapper. This is a minimal Artix/Arch setup script. This will make changes to your system." \
 	12 60 || exit 1
 
 # User creation

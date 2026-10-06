@@ -319,8 +319,7 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
-sleep 1
-pacman -S --needed --noconfirm libxinerama libxft >/dev/null 2>&1 || {
+pacman -S --needed --noconfirm libxinerama libxft xorg-xinit >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \
@@ -329,6 +328,14 @@ pacman -S --needed --noconfirm libxinerama libxft >/dev/null 2>&1 || {
 		8 60
 	exit 1
 }
+sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
+# Key Repeat / Auto-repeat behavior
+xset r rate 400 32
+
+# Activate dbus variables
+dbus-update-activation-environment --all
+dbus-launch ssh-agent dwm
+EOF
 
 # Lib32
 whiptail \

@@ -229,7 +229,7 @@ alias ll='ls -lah'
 # Load syntax highlighting; should be last
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/.config/zsh/.zshrc"' <<'EOF'
+sudo -u "$name" sh -c 'cat > "$HOME/.config/zsh/.zprofile"' <<'EOF'
 # Add all directories in `~/.local/bin` to $PATH
 export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
 

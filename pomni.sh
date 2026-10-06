@@ -1,3 +1,4 @@
+```sh
 #!/bin/sh
 
 # Check root
@@ -22,15 +23,15 @@ window=white,black
 border=white,black
 shadow=black,black
 title=white,black
-button=black,white
-actbutton=white,blue
-compactbutton=black,white
+button=black,magenta
+actbutton=white,magenta
+compactbutton=black,magenta
 checkbox=white,black
-actcheckbox=white,blue
+actcheckbox=white,magenta
 entry=white,black
 label=white,black
 listbox=white,black
-actlistbox=white,blue
+actlistbox=white,magenta
 textbox=white,black
 helpline=white,black
 roottext=white,black
@@ -146,6 +147,19 @@ if ! id -u "$name" >/dev/null 2>&1; then
 	}
 fi
 
+# Get user's home directory
+home=$(getent passwd "$name" | cut -d: -f6)
+
+if [ -z "$home" ]; then
+	whiptail \
+		--title "Error" \
+		--fullbuttons \
+		--msgbox \
+		"Failed to determine the home directory for $name." \
+		8 60
+	exit 1
+fi
+
 # Make sure the user has Zsh
 usermod -s /bin/zsh "$name" || {
 	whiptail \
@@ -185,3 +199,12 @@ unset password
 printf '%s\n' '%wheel ALL=(ALL) NOPASSWD: ALL' \
 	>/etc/sudoers.d/wheel
 chmod 440 /etc/sudoers.d/wheel
+
+# Finished
+whiptail \
+	--title "Installation Complete" \
+	--fullbuttons \
+	--msgbox \
+	"Everything is done!\n\nUser: $name\nShell: Zsh\nSudo: wheel (passwordless)\n\nYou can now log in as $name." \
+	12 60
+```

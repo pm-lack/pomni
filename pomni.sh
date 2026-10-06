@@ -13,7 +13,7 @@ TMPDIR=$(mktemp -d) || exit 1
 trap 'rm -rf "$TMPDIR"' EXIT
 
 # Install whiptail
-pacman -S --needed --noconfirm libnewt || exit 1
+pacman -S --needed --noconfirm libnewt >/dev/null 2>&1 || exit 1
 
 # Whiptail colors
 export NEWT_COLORS='
@@ -123,7 +123,7 @@ whiptail \
 	"Installing Git and Zsh..." \
 	8 50
 
-pacman -S --needed --noconfirm git zsh || {
+pacman -S --needed --noconfirm git zsh >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \
@@ -263,7 +263,7 @@ curl -fsSL \
 }
 
 # Add XLibre signing key
-pacman-key --add "$TMPDIR/xlibre-artixlinux.asc" || {
+pacman-key --add "$TMPDIR/xlibre-artixlinux.asc" >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \
@@ -274,7 +274,7 @@ pacman-key --add "$TMPDIR/xlibre-artixlinux.asc" || {
 }
 
 # Locally sign XLibre signing key
-pacman-key --lsign-key 2AFFCD7B42ADD2E7 || {
+pacman-key --lsign-key 2AFFCD7B42ADD2E7 >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \
@@ -290,7 +290,7 @@ if ! grep -q '^\[xlibre-stable\]' /etc/pacman.conf; then
 fi
 
 # Refresh package databases and upgrade
-pacman -Syyu --noconfirm || {
+pacman -Syyu --noconfirm >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \
@@ -301,7 +301,7 @@ pacman -Syyu --noconfirm || {
 }
 
 # Install XLibre
-pacman -S --needed --noconfirm xlibre-meta || {
+pacman -S --needed --noconfirm xlibre-meta >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \
@@ -318,7 +318,7 @@ whiptail \
 	"Setting up XLibre..." \
 	8 50
 
-pacman -S --needed --noconfirm libxinerama libxft || {
+pacman -S --needed --noconfirm libxinerama libxft >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \

@@ -21,7 +21,7 @@ export NEWT_COLORS='root=white,black window=white,black border=white,black shado
 # Welcome
 whiptail --title "pm's Optimized Minimal Nest Installer" \
 	--msgbox \
-	"Welcome!\n\nThis installer will create or configure your user account and install a minimal Zsh environment." \
+	"Welcome!\n\nWIP Artix/Arch bootstrapper. This installer will create or configure your user account and install a minimal Zsh environment." \
 	10 60
 
 # User creation

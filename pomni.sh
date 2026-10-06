@@ -330,6 +330,18 @@ pacman -S --needed --noconfirm libxinerama libxft >/dev/null 2>&1 || {
 	exit 1
 }
 
+# Lib32
+whiptail \
+	--title "Adding repo" \
+	--infobox \
+	"Setting up Lib32..." \
+	8 50
+
+sleep 1
+if ! grep -q '^\[lib32\]' /etc/pacman.conf; then
+	sed -i '/^\[galaxy\]/i [lib32]\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf
+fi
+
 # Finished
 whiptail \
 	--title "Installation Complete" \

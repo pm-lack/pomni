@@ -41,7 +41,9 @@ whiptail \
 	--title "pm's Optimized Minimal Nest Installer" \
 	--fullbuttons \
 	--msgbox \
-	"Welcome!\n\nWIP Artix/Arch bootstrapper. This installer will create or configure your user account and install a minimal Zsh environment." \
+	"Welcome!
+
+WIP Artix/Arch bootstrapper. This installer will create or configure your user account and install a minimal Zsh environment." \
 	10 60 || exit 1
 
 # User creation
@@ -71,7 +73,7 @@ if id -u "$name" >/dev/null 2>&1; then
 		--yes-button "Yes" \
 		--no-button "No wait..." \
 		--yesno \
-		"The user \`$name\` already exists on this system. Delete \`$name\` and continue?\n\nContinue?" \
+		"The user \`$name\` already exists on this system. Delete \`$name\` and continue?" \
 		14 70
 	then
 		exit 0

@@ -16,7 +16,6 @@ trap 'rm -rf "$TMPDIR"' EXIT
 pacman -S --needed --noconfirm libnewt || exit 1
 
 # Whiptail colors
-# Whiptail colors
 export NEWT_COLORS='root=white,black window=white,black border=white,black shadow=black,black title=white,black button=black,white actbutton=white,blue compactbutton=black,white checkbox=white,black actcheckbox=white,blue entry=white,black label=white,black listbox=white,black actlistbox=white,blue textbox=white,black helpline=white,black roottext=white,black'
 
 # Welcome

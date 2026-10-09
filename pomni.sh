@@ -9,8 +9,17 @@ fi
 # Temporary directory
 TMPDIR=$(mktemp -d) || exit 1
 
-# Delete the temporary directory when the script exits
-trap 'rm -rf "$TMPDIR"' EXIT
+# Cleanup when the script exits
+cleanup() {
+	rm -rf "$TMPDIR"
+
+	if [ -f /etc/sudoers.d/wheel ]; then
+		printf '%s\n' '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
+		chmod 440 /etc/sudoers.d/wheel
+	fi
+}
+
+trap cleanup EXIT
 
 # Install whiptail
 pacman -S --needed --noconfirm libnewt >/dev/null 2>&1 || exit 1
@@ -38,7 +47,7 @@ roottext=white,black
 
 # Welcome
 whiptail \
-	--title "pm's Optimized Minimal Nest Installer" \
+	--title "pm's Opinionated Minimal Nest Installer" \
 	--fullbuttons \
 	--msgbox \
 	"Welcome!\n\nWIP Artix/Arch bootstrapper. This is a minimal Artix/Arch setup script. This will make changes to your system." \
@@ -123,7 +132,7 @@ whiptail \
 	"Installing Git and Zsh..." \
 	8 50
 
-pacman -S --needed --noconfirm git zsh >/dev/null 2>&1 || {
+pacman -S --needed --noconfirm git zsh zsh-autosuggestions >/dev/null 2>&1 || {
 	whiptail \
 		--title "Error" \
 		--fullbuttons \
@@ -159,17 +168,6 @@ if [ -z "$home" ]; then
 	exit 1
 fi
 
-# Make sure the user has Zsh
-usermod -s /bin/zsh "$name" || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to set Zsh as $name's shell." \
-		8 50
-	exit 1
-}
-
 # Add user to wheel
 usermod -aG wheel "$name" || {
 	whiptail \
@@ -202,6 +200,7 @@ chmod 440 /etc/sudoers.d/wheel
 # Zsh config
 sudo -u "$name" mkdir -p "$home/.local/bin"
 sudo -u "$name" mkdir -p "$home/.config/zsh"
+sudo -u "$name" mkdir -p "$home/.cache/zsh"
 sudo -u "$name" sh -c 'cat > "$HOME/.zshenv"' <<'EOF'
 export ZDOTDIR="$HOME/.config/zsh"
 EOF
@@ -231,8 +230,7 @@ source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.config/zsh/.zprofile"' <<'EOF'
 # Add all directories in `~/.local/bin` to $PATH
-export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)"
-
+export PATH="$HOME/.local/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export TERMINAL="st"
@@ -241,7 +239,18 @@ export MOZ_USE_XINPUT2=1                  # Mozilla smooth scrolling/touchpads.
 # Start graphical server on user's current tty if not already running.
 #[ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
 EOF
-chsh -s /bin/zsh "$name" >/dev/null 2>&1
+
+# Lib32
+whiptail \
+	--title "Adding repo" \
+	--infobox \
+	"Setting up Lib32..." \
+	8 50
+
+sleep 1
+if ! grep -q '^\[lib32\]' /etc/pacman.conf; then
+	sed -i '/^\[galaxy\]/i [lib32]\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf
+fi
 
 # XLibre
 whiptail \
@@ -336,27 +345,6 @@ xset r rate 400 32
 dbus-update-activation-environment --all
 dbus-launch ssh-agent dwm
 EOF
-
-# Lib32
-whiptail \
-	--title "Adding repo" \
-	--infobox \
-	"Setting up Lib32..." \
-	8 50
-
-sleep 1
-if ! grep -q '^\[lib32\]' /etc/pacman.conf; then
-	sed -i '/^\[galaxy\]/i [lib32]\nInclude = /etc/pacman.d/mirrorlist\n' /etc/pacman.conf
-fi
-pacman -Syyu --noconfirm >/dev/null 2>&1 || {
-whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to add Lib32." \
-		8 60
-	exit 1
-}
 
 # Finished
 whiptail \

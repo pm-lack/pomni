@@ -145,11 +145,21 @@ pacman -S --needed --noconfirm git zsh zsh-autosuggestions >/dev/null 2>&1 || {
 # Create user if necessary
 if ! id -u "$name" >/dev/null 2>&1; then
 	useradd -m -s /bin/zsh "$name" || {
-		whiptail \
-			--title "Error" \
-			--fullbuttons \
-			--msgbox \
-			"Failed to create user $name." \
+		whiptail
+			--title "Error"
+			--fullbuttons
+			--msgbox
+			"Failed to create user $name."
+			8 50
+		exit 1
+	}
+else
+	usermod -s /bin/zsh "$name" || {
+		whiptail
+			--title "Error"
+			--fullbuttons
+			--msgbox
+			"Failed to set Zsh as the login shell for $name."
 			8 50
 		exit 1
 	}

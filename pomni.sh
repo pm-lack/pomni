@@ -347,6 +347,7 @@ pacman -S --needed --noconfirm libxinerama libxft xorg-xinit >/dev/null 2>&1 || 
 		8 60
 	exit 1
 }
+sudo -u "$name" mkdir -p "$home/.config/x11"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32

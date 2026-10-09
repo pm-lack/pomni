@@ -21,9 +21,6 @@ cleanup() {
 
 trap cleanup EXIT
 
-# Install whiptail
-pacman -S --needed --noconfirm libnewt >/dev/null 2>&1 || exit 1
-
 # Whiptail colors
 export NEWT_COLORS='
 root=white,black

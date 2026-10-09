@@ -14,8 +14,11 @@ cleanup() {
 	rm -rf "$TMPDIR"
 
 	if [ -f /etc/sudoers.d/wheel ]; then
-		printf '%s\n' '%wheel ALL=(ALL:ALL) ALL' > /etc/sudoers.d/wheel
-		chmod 440 /etc/sudoers.d/wheel
+		printf '%s\n' \
+			'%wheel ALL=(ALL:ALL) ALL' \
+			'%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/shutdown, /usr/bin/halt, /usr/bin/reboot' \
+			> /etc/sudoers.d/wheel
+			chmod 440 /etc/sudoers.d/wheel
 	fi
 }
 trap cleanup EXIT

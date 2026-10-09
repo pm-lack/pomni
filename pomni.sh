@@ -18,7 +18,6 @@ cleanup() {
 		chmod 440 /etc/sudoers.d/wheel
 	fi
 }
-
 trap cleanup EXIT
 
 # Whiptail colors
@@ -231,6 +230,7 @@ _comp_options+=(globdots)
 
 # Alias
 alias ll='ls -lah'
+alias susu='sudo su root'
 
 # Load syntax highlighting; should be last
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null

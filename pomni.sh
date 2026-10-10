@@ -118,19 +118,16 @@ whiptail \
 	"Installing Git and Zsh..." \
 	8 50
 
-pacman -S --needed --noconfirm git zsh zsh-autosuggestions >/dev/null 2>&1 || {
+pacman -S --needed --noconfirm git zsh zsh-autosuggestions >/dev/null 2>&1 ||
 	die "Failed to install Git and Zsh."
-}
 
 # Create user if necessary
 if ! id -u "$name" >/dev/null 2>&1; then
-	useradd -m -s /bin/zsh "$name" || {
+	useradd -m -s /bin/zsh "$name" ||
 		die "Failed to create user $name."
-	}
 else
-	usermod -s /bin/zsh "$name" || {
+	usermod -s /bin/zsh "$name" ||
 		die "Failed to set Zsh as the login shell for $name."
-	}
 fi
 
 # Get user's home directory
@@ -141,14 +138,12 @@ if [ -z "$home" ]; then
 fi
 
 # Add user to wheel
-usermod -aG wheel "$name" || {
+usermod -aG wheel "$name" ||
 	die "Failed to add $name to the wheel group."
-}
 
 # Set password
-printf '%s:%s\n' "$name" "$password" | chpasswd || {
+printf '%s:%s\n' "$name" "$password" | chpasswd ||
 	die "Failed to set the user's password."
-}
 
 unset password
 
@@ -223,19 +218,16 @@ whiptail \
 # Download XLibre signing key
 curl -fsSL \
 	-o "$TMPDIR/xlibre-artixlinux.asc" \
-	https://xlibre-artix.github.io/xlibre-artixlinux.asc || {
+	https://xlibre-artix.github.io/xlibre-artixlinux.asc ||
 	die "Failed to download the XLibre signing key."
-}
 
 # Add XLibre signing key
-pacman-key --add "$TMPDIR/xlibre-artixlinux.asc" >/dev/null 2>&1 || {
+pacman-key --add "$TMPDIR/xlibre-artixlinux.asc" >/dev/null 2>&1 ||
 	die "Failed to add the XLibre signing key."
-}
 
 # Locally sign XLibre signing key
-pacman-key --lsign-key 2AFFCD7B42ADD2E7 >/dev/null 2>&1 || {
+pacman-key --lsign-key 2AFFCD7B42ADD2E7 >/dev/null 2>&1 ||
 	die "Failed to locally sign the XLibre signing key."
-}
 
 # Add XLibre repository
 if ! grep -q '^\[xlibre-stable\]' /etc/pacman.conf; then
@@ -243,14 +235,12 @@ if ! grep -q '^\[xlibre-stable\]' /etc/pacman.conf; then
 fi
 
 # Refresh package databases and upgrade
-pacman -Syyu --noconfirm >/dev/null 2>&1 || {
+pacman -Syyu --noconfirm >/dev/null 2>&1 ||
 	die "Failed to update the package databases."
-}
 
 # Install XLibre
-pacman -S --needed --noconfirm xlibre-meta >/dev/null 2>&1 || {
+pacman -S --needed --noconfirm xlibre-meta >/dev/null 2>&1 ||
 	die "Failed to install XLibre."
-}
 
 # X dependencies 
 whiptail \
@@ -259,9 +249,8 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
-pacman -S --needed --noconfirm libxinerama libxft xorg-xinit >/dev/null 2>&1 || {
+pacman -S --needed --noconfirm libxinerama libxft xorg-xinit >/dev/null 2>&1 ||
 	die "Failed to install X dependencies."
-}
 sudo -u "$name" mkdir -p "$home/.config/x11"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 # Key Repeat / Auto-repeat behavior

@@ -266,5 +266,5 @@ whiptail \
 	--title "Installation Complete" \
 	--fullbuttons \
 	--msgbox \
-	"Everything is done!\n\nUser: $name\nShell: Zsh\nSudo: wheel (passwordless)\n\nYou can now log in as $name." \
+	"Everything is done!\n\nUser: $name\nShell: Zsh\nYou can now log in as $name." \
 	12 60

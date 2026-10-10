@@ -256,7 +256,7 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
-pacman -S --needed --noconfirm libxinerama libxft xorg-xinit >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm libxinerama libxft xorg-xinit libx11 freetype2 fontconfig >/dev/null 2>&1 ||
 	die "Failed to install X dependencies."
 sudo -u "$name" mkdir -p "$home/.config/x11"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'

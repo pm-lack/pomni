@@ -23,6 +23,11 @@ cleanup() {
 }
 trap cleanup EXIT
 
+die() {
+	whiptail --title "Error" --fullbuttons --msgbox "$1" 8 60
+	exit 1
+}
+
 # Whiptail colors
 export NEWT_COLORS='
 root=white,black
@@ -62,13 +67,7 @@ name=$(whiptail \
 
 # Make sure a username was entered
 if [ -z "$name" ]; then
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"No username was entered." \
-		8 50
-	exit 1
+	die "No username was entered."
 fi
 
 # Check whether the user already exists
@@ -95,13 +94,7 @@ password=$(whiptail \
 	3>&1 1>&2 2>&3) || exit 1
 
 if [ -z "$password" ]; then
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"No password was entered." \
-		8 50
-	exit 1
+	die "No password was entered."
 fi
 
 # Confirm password
@@ -113,13 +106,7 @@ password_confirm=$(whiptail \
 	3>&1 1>&2 2>&3) || exit 1
 
 if [ "$password" != "$password_confirm" ]; then
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"The passwords do not match." \
-		8 50
-	exit 1
+	die "The passwords do not match."
 fi
 
 unset password_confirm
@@ -132,35 +119,17 @@ whiptail \
 	8 50
 
 pacman -S --needed --noconfirm git zsh zsh-autosuggestions >/dev/null 2>&1 || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to install Git and Zsh." \
-		8 50
-	exit 1
+	die "Failed to install Git and Zsh."
 }
 
 # Create user if necessary
 if ! id -u "$name" >/dev/null 2>&1; then
 	useradd -m -s /bin/zsh "$name" || {
-		whiptail
-			--title "Error"
-			--fullbuttons
-			--msgbox
-			"Failed to create user $name."
-			8 50
-		exit 1
+		die "Failed to create user $name."
 	}
 else
 	usermod -s /bin/zsh "$name" || {
-		whiptail
-			--title "Error"
-			--fullbuttons
-			--msgbox
-			"Failed to set Zsh as the login shell for $name."
-			8 50
-		exit 1
+		die "Failed to set Zsh as the login shell for $name."
 	}
 fi
 
@@ -168,35 +137,17 @@ fi
 home=$(getent passwd "$name" | cut -d: -f6)
 
 if [ -z "$home" ]; then
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to determine the home directory for $name." \
-		8 60
-	exit 1
+	die "Failed to determine the home directory for $name."
 fi
 
 # Add user to wheel
 usermod -aG wheel "$name" || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to add $name to the wheel group." \
-		8 50
-	exit 1
+	die "Failed to add $name to the wheel group."
 }
 
 # Set password
 printf '%s:%s\n' "$name" "$password" | chpasswd || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to set the user's password." \
-		8 50
-	exit 1
+	die "Failed to set the user's password."
 }
 
 unset password
@@ -273,35 +224,17 @@ whiptail \
 curl -fsSL \
 	-o "$TMPDIR/xlibre-artixlinux.asc" \
 	https://xlibre-artix.github.io/xlibre-artixlinux.asc || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to download the XLibre signing key." \
-		8 60
-	exit 1
+	die "Failed to download the XLibre signing key."
 }
 
 # Add XLibre signing key
 pacman-key --add "$TMPDIR/xlibre-artixlinux.asc" >/dev/null 2>&1 || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to add the XLibre signing key." \
-		8 60
-	exit 1
+	die "Failed to add the XLibre signing key."
 }
 
 # Locally sign XLibre signing key
 pacman-key --lsign-key 2AFFCD7B42ADD2E7 >/dev/null 2>&1 || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to locally sign the XLibre signing key." \
-		8 60
-	exit 1
+	die "Failed to locally sign the XLibre signing key."
 }
 
 # Add XLibre repository
@@ -311,24 +244,12 @@ fi
 
 # Refresh package databases and upgrade
 pacman -Syyu --noconfirm >/dev/null 2>&1 || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to update the package databases." \
-		8 60
-	exit 1
+	die "Failed to update the package databases."
 }
 
 # Install XLibre
 pacman -S --needed --noconfirm xlibre-meta >/dev/null 2>&1 || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to install XLibre." \
-		8 60
-	exit 1
+	die "Failed to install XLibre."
 }
 
 # X dependencies 
@@ -339,13 +260,7 @@ whiptail \
 	8 50
 
 pacman -S --needed --noconfirm libxinerama libxft xorg-xinit >/dev/null 2>&1 || {
-	whiptail \
-		--title "Error" \
-		--fullbuttons \
-		--msgbox \
-		"Failed to install X dependencies." \
-		8 60
-	exit 1
+	die "Failed to install X dependencies."
 }
 sudo -u "$name" mkdir -p "$home/.config/x11"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'

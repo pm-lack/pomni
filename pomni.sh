@@ -256,10 +256,11 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
-pacman -S --needed --noconfirm libxinerama libxft xorg-xinit libx11 freetype2 fontconfig harfbuzz >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm libxinerama libxft xorg-xinit libx11 freetype2 fontconfig harfbuzz xcompmgr >/dev/null 2>&1 ||
 	die "Failed to install X dependencies."
 sudo -u "$name" mkdir -p "$home/.config/x11"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
+#!/bin/sh
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32
 
@@ -267,6 +268,16 @@ xset r rate 400 32
 dbus-update-activation-environment --all
 dbus-launch ssh-agent dwm
 EOF
+sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
+#!/bin/sh
+xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
+autostart="xcompmgr"
+
+for program in $autostart; do
+	pidof -sx "$program" || "$program" &
+done >/dev/null 2>&1
+EOF
+
 
 # Suckless software
 whiptail \

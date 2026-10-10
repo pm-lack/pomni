@@ -153,6 +153,10 @@ printf '%s\n' '%wheel ALL=(ALL) NOPASSWD: ALL' \
 chmod 440 /etc/sudoers.d/wheel
 
 # Zsh config
+# Fast syntax highlighting
+git clone --depth 1 https://github.com/zdharma-continuum/fast-syntax-highlighting /usr/share/zsh/plugins/fast-syntax-highlighting >/dev/null 2>&1 ||
+		die "Failed to clone fast-syntax-highlighting."
+
 sudo -u "$name" mkdir -p "$home/.local/bin"
 sudo -u "$name" mkdir -p "$home/.config/zsh"
 sudo -u "$name" mkdir -p "$home/.cache/zsh"
@@ -181,11 +185,12 @@ _comp_options+=(globdots)
 alias ll='ls -lah'
 alias susu='sudo su root'
 
-# Load syntax highlighting; should be last
+# Load zsh plugins; should be last.
+source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
 EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.config/zsh/.zprofile"' <<'EOF'
-# Add all directories in `~/.local/bin` to $PATH
+# Add ~/.local/bin to $PATH
 export PATH="$HOME/.local/bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"

@@ -278,6 +278,21 @@ for program in $autostart; do
 done >/dev/null 2>&1
 EOF
 
+# Tamzen font
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Installing Tamzen font..." \
+	8 50
+ 
+git clone --depth 1 https://github.com/sunaku/tamzen-font.git "$TMPDIR/tamzen-font" >/dev/null 2>&1 ||
+	die "Failed to clone tamzen-font."
+mkdir -p /usr/local/share/fonts/tamzen ||
+	die "Failed to create the Tamzen font directory."
+cp "$TMPDIR"/tamzen-font/pcf/*.pcf /usr/local/share/fonts/tamzen/ ||
+	die "Failed to copy the Tamzen fonts."
+fc-cache -f >/dev/null 2>&1 ||
+	die "Failed to update the font cache."
 
 # Suckless software
 whiptail \

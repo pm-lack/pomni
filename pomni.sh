@@ -72,17 +72,19 @@ fi
 
 # Check whether the user already exists
 if id -u "$name" >/dev/null 2>&1; then
-	if ! whiptail \
+	uid=$(id -u "$name")
+	if [ "$uid" -lt 1000 ]; then
+		die "Refusing to modify the system account \`$name\`."
+	fi
+
+	whiptail \
 		--title "WARNING" \
 		--fullbuttons \
-		--yes-button "Yes" \
-		--no-button "No wait..." \
+		--yes-button "Continue" \
+		--no-button "Cancel" \
 		--yesno \
-		"The user \`$name\` already exists on this system.\n\nDelete \`$name\` and continue?" \
-		13 60
-	then
-		exit 0
-	fi
+		"The user \`$name\` already exists.\n\nTheir password, login shell, groups, and zsh/X config files will be overwritten. Other files in their home directory are kept." \
+		13 60 || exit 0
 fi
 
 # Password

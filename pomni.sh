@@ -24,7 +24,7 @@ cleanup() {
 trap cleanup EXIT
 
 die() {
-	whiptail --title "Error" --fullbuttons --msgbox "$1" 8 60
+	whiptail --title "Error" --fullbuttons --msgbox "$1" 9 60
 	exit 1
 }
 

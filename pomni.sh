@@ -55,7 +55,7 @@ whiptail \
 	--fullbuttons \
 	--msgbox \
 	"Welcome!\n\nWIP Artix/Arch bootstrapper. This is a minimal Artix/Arch setup script. This will make changes to your system." \
-	14 65 || exit 1
+	12 61 || exit 1
 
 # User creation
 name=$(whiptail \

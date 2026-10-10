@@ -268,6 +268,28 @@ dbus-update-activation-environment --all
 dbus-launch ssh-agent dwm
 EOF
 
+# Suckless software
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Building dwm, dwmblocks, dmenu and st..." \
+	8 50
+
+sudo -u "$name" mkdir -p "$home/.local/src"
+
+for repo in dwm-6.6 dwmblocks dmenu st; do
+	# Clone as the user so everything stays user-owned
+	sudo -u "$name" env GIT_TERMINAL_PROMPT=0 \
+		git clone --depth 1 "https://github.com/pm-lack/$repo" "$home/.local/src/$repo" >/dev/null 2>&1 ||
+		die "Failed to clone $repo."
+
+	# Build as the user; sudo only for the install step
+	(
+		cd "$home/.local/src/$repo" || exit 1
+		sudo -u "$name" sudo make clean install >/dev/null 2>&1
+	) || die "Failed to build and install $repo."
+done
+
 # Finished
 whiptail \
 	--title "Installation Complete" \

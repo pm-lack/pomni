@@ -303,7 +303,7 @@ whiptail \
 
 sudo -u "$name" mkdir -p "$home/.local/src"
 
-for repo in dwm-6.6 dwmblocks dmenu st; do
+for repo in dwm-6.8 dmenu st; do
 	dest="$home/.local/src/$repo"
 
 	# Clone as the user so everything stays user-owned

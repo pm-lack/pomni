@@ -449,6 +449,9 @@ esac
 xwallpaper --zoom "$bgloc"
 EOF
 sudo -u "$name" mkdir -p "$home/Pictures/wallpaper"
+sudo -u "$name" curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
+	"https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/eva.jpg"
+sudo -u "$name" ln -sf "$home/Pictures/wallpaper/eva.jpg" "$home/.local/share/bg"
 
 # Finished
 whiptail \

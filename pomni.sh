@@ -383,8 +383,8 @@ sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'
 date '+[%m-%d %H:%M]'
 EOF
 
-# Make block runable
-chmod +x "$home/.local/bin/statusbar/*"
+# Make scripts runable
+chmod +x /home/$name/.local/bin/statusbar/sb-*
 
 # Finished
 whiptail \

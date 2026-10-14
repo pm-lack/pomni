@@ -355,6 +355,30 @@ for repo in dwm-6.8 dmenu st dwmblocks; do
 		die "Failed to build and install $repo."
 done
 
+# Creating blocks
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Creating blocks..." \
+	8 50
+sudo -u "$name" mkdir -p "$home/.local/bin/statusbar"
+sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-volume"' <<'EOF'
+#!/bin/sh
+case $BLOCK_BUTTON in
+	1) setsid -w -f "$TERMINAL" -e pulsemixer; pkill -RTMIN+10 "${STATUSBAR:-dwmblocks}" ;;
+	2) wpctl set-mute @DEFAULT_SINK@ toggle ;;
+	4) wpctl set-volume @DEFAULT_SINK@ 1%+ ;;
+	5) wpctl set-volume @DEFAULT_SINK@ 1%- ;;
+esac
+vol="$(wpctl get-volume @DEFAULT_SINK@)"
+case "$vol" in
+	*"MUTED"*) echo "[mute]"; exit ;;
+esac
+vol="${vol#Volume: }"
+vol="$(printf "%.0f" "$(printf '%s\n' "$vol" | awk '{printf "%f", $1 * 100}')")"
+echo "[vol:$vol%]"
+EOF
+
 # Finished
 whiptail \
 	--title "Finished" \

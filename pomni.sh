@@ -432,7 +432,7 @@ whiptail \
 	--title "Installing" \
 	--infobox \
 	"Setting up utilities.\n\nThis may take a while..." \
-	13 50
+	8 50
 
 pacman -S --needed --noconfirm lf ueberzugpp libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf >/dev/null 2>&1 ||
 	die "Failed to install utilities."

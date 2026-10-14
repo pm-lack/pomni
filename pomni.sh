@@ -292,6 +292,7 @@ EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
 xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
+setbg &
 autostart="xcompmgr dunst unclutter pipewire"
 
 for program in $autostart; do
@@ -435,6 +436,19 @@ whiptail \
 
 pacman -S --needed --noconfirm lf ueberzugpp libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf >/dev/null 2>&1 ||
 	die "Failed to install utilities."
+sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'
+#!/bin/sh
+# Location of link to wallpaper link.
+bgloc="${XDG_DATA_HOME:-$HOME/.local/share}/bg"
+trueloc="$(readlink -f "$1")" &&
+case "$(file --mime-type -b "$trueloc")" in
+	image/* ) ln -sf "$trueloc" "$bgloc" ;;
+	inode/directory ) ln -sf "$(find "$trueloc" -iregex '.*.\(jpg\|jpeg\|png\|gif\)' -type f | shuf -n 1)" "$bgloc" ;;
+	*) exit 1 ;;
+esac
+xwallpaper --zoom "$bgloc"
+EOF
+sudo -u "$name" mkdir -p "$home/Pictures/wallpaper"
 
 # Finished
 whiptail \

@@ -312,7 +312,7 @@ EOF
 whiptail \
 	--title "Installing" \
 	--infobox \
-	"Installing Tamzen font..." \
+	"Installing tamzen font..." \
 	8 50
  
 git clone --depth 1 https://github.com/sunaku/tamzen-font.git "$TMPDIR/tamzen-font" >/dev/null 2>&1 ||

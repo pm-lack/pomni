@@ -502,6 +502,7 @@ else
 	lf "$@" 3>&-
 fi
 EOF
+chmod +x "$home"/.local/bin/lfub
 
 # GTK
 sudo -u "$name" mkdir -p "$home/.config/gtk-3.0"

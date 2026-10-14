@@ -186,6 +186,9 @@ _comp_options+=(globdots)
 alias ll='ls -lah'
 alias susu='sudo su root'
 
+# Fetch
+fastfetch -l ~/.config/fastfetch/rose_ascii.txt
+
 # Load zsh plugins; should be last.
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
@@ -434,7 +437,7 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf fastfetch >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'
 #!/bin/sh
@@ -454,6 +457,23 @@ sudo -u "$name" curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
 	"https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/eva.jpg"
 sudo -u "$name" mkdir -p "$home/.local/share"
 sudo -u "$name" ln -sf "$home/Pictures/wallpaper/eva.jpg" "$home/.local/share/bg"
+sudo -u "$name" mkdir -p "$home/.config/fastfetch"
+sudo -u "$name" sh -c 'cat > "$HOME/config/fastfetch/config.jsonc"' <<'EOF'
+{ "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json", "modules": [ "title", "separator", "os", "kernel", "uptime", "packages", "cpu", "wm", "memory", "colors" ] }
+EOF
+sudo -u "$name" sh -c 'cat > "$HOME/config/fastfetch/rose_ascii.txt"' <<'EOF'
+$1           ,
+$1       .--'|}
+$1      /    /}}
+$1    .=$1\.--'`\}
+$1   //`$1 '---./`
+$1   ||  /|
+$1    \\| |
+$1  |\_\\/
+$1  \__/\\
+$1       \\
+$1        \|
+EOF
 
 # Finished
 whiptail \

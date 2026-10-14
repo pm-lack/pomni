@@ -364,18 +364,20 @@ whiptail \
 sudo -u "$name" mkdir -p "$home/.local/bin/statusbar"
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-volume"' <<'EOF'
 #!/bin/sh
+PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin"
+export PATH
 case $BLOCK_BUTTON in
-	1) setsid -w -f "$TERMINAL" -e pulsemixer; pkill -RTMIN+10 "${STATUSBAR:-dwmblocks}" ;;
+	1) setsid -f st -e pulsemixer ;;
 	2) wpctl set-mute @DEFAULT_SINK@ toggle ;;
 	4) wpctl set-volume @DEFAULT_SINK@ 1%+ ;;
 	5) wpctl set-volume @DEFAULT_SINK@ 1%- ;;
 esac
-vol="$(wpctl get-volume @DEFAULT_SINK@)"
+vol=$(wpctl get-volume @DEFAULT_SINK@) || exit 1
 case "$vol" in
 	*"MUTED"*) echo "[mute]"; exit ;;
 esac
-vol="${vol#Volume: }"
-vol="$(printf "%.0f" "$(printf '%s\n' "$vol" | awk '{printf "%f", $1 * 100}')")"
+vol=${vol#Volume: }
+vol=$(awk -v v="$vol" 'BEGIN { printf "%.0f", v * 100 }')
 echo "[vol:$vol%]"
 EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'

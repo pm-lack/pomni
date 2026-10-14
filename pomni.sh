@@ -322,8 +322,8 @@ done
 
 # Finished
 whiptail \
-	--title "Installation Complete" \
+	--title "Finished" \
 	--fullbuttons \
 	--msgbox \
-	"Everything is done!\n\nUser: $name\nShell: Zsh\nYou can now log in as $name." \
-	12 60
+	"Please reboot." \
+	8 50

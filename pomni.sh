@@ -510,6 +510,7 @@ if [ -n "$FIFO_UEBERZUG" ]; then
 	printf '{"action": "remove", "identifier": "PREVIEW"}\n' > "$FIFO_UEBERZUG"
 fi
 EOF
+chmod +x "$home"/.config/lf/cleaner
 sudo -u "$name" sh -c 'cat > "$HOME/.config/lf/scope"' <<'EOF'
 #!/bin/sh
 set -C -f
@@ -560,6 +561,7 @@ case "$(file --dereference --brief --mime-type -- "$1")" in
 esac
 exit 1
 EOF
+chmod +x "$home"/.config/lf/scope
 sudo -u "$name" sh -c 'cat > "$HOME/.config/lf/lfrc"' <<'EOF'
 set shellopts '-eu'
 set ifs "\n"

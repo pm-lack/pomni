@@ -296,6 +296,7 @@ autostart="xcompmgr pipewire"
 
 for program in $autostart; do
 	pidof -sx "$program" || "$program" &
+	
 done >/dev/null 2>&1
 EOF
 
@@ -312,8 +313,25 @@ mkdir -p /usr/local/share/fonts/tamzen ||
 	die "Failed to create the Tamzen font directory."
 cp "$TMPDIR"/tamzen-font/pcf/*.pcf /usr/local/share/fonts/tamzen/ ||
 	die "Failed to copy the Tamzen fonts."
+rm -f /etc/fonts/conf.d/70-no-bitmaps*.conf
+ln -sf /usr/share/fontconfig/conf.avail/70-yes-bitmaps.conf /etc/fonts/conf.d/70-yes-bitmaps.conf
 fc-cache -f >/dev/null 2>&1 ||
 	die "Failed to update the font cache."
+mkdir -p /etc/fonts/conf.d/
+sh -c 'cat > "/etc/fonts/conf.d/60-tamzen.conf"' <<'EOF'
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <alias>
+    <family>monospace</family>
+    <prefer><family>Tamzen</family></prefer>
+  </alias>
+  <alias>
+    <family>sans-serif</family>
+    <prefer><family>Tamzen</family></prefer>
+  </alias>
+</fontconfig>
+EOF
 
 # Suckless software
 whiptail \

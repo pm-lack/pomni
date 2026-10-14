@@ -264,6 +264,10 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32
 
+# xprofile
+[ -r "$HOME/.config/x11/xprofile" ] &&
+	. "$HOME/.config/x11/xprofile"
+
 # Activate dbus variables
 dbus-update-activation-environment --all
 dbus-launch ssh-agent dwm

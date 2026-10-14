@@ -361,4 +361,4 @@ whiptail \
 	--fullbuttons \
 	--msgbox \
 	"Please reboot." \
-	8 50
+	9 50

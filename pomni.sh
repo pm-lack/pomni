@@ -431,5 +431,5 @@ whiptail \
 	--title "Finished" \
 	--fullbuttons \
 	--msgbox \
-	"Please reboot." \
+	"Success! Please reboot." \
 	9 50

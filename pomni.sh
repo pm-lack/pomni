@@ -448,6 +448,7 @@ case "$(file --mime-type -b "$trueloc")" in
 esac
 xwallpaper --zoom "$bgloc"
 EOF
+chmod +x "$home"/.local/bin/setbg
 sudo -u "$name" mkdir -p "$home/Pictures/wallpaper"
 sudo -u "$name" curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
 	"https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/eva.jpg"

@@ -54,7 +54,7 @@ whiptail \
 	--title "pm's Opinionated Minimal Nest Installer" \
 	--fullbuttons \
 	--msgbox \
-	"Welcome!\n\nWIP Artix/Arch bootstrapper. This is a minimal Artix/Arch setup script. This will make changes to your system." \
+	"Welcome!\n\nPomni is a minimal Artix setup script designed to install a basic opinionated dwm environment. This will make changes to your system." \
 	12 61 || exit 1
 
 # User creation

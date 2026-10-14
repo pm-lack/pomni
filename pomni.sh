@@ -292,7 +292,7 @@ EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
 xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
-autostart="xcompmgr pipewire"
+autostart="xcompmgr dunst unclutter pipewire"
 
 for program in $autostart; do
 	pidof -sx "$program" || "$program" &

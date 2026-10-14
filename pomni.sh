@@ -120,7 +120,7 @@ whiptail \
 	"Installing requirements..." \
 	8 50
 
-pacman -S --needed --noconfirm base-devel git zsh zsh-autosuggestions NetworkManager >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm git zsh zsh-autosuggestions >/dev/null 2>&1 ||
 	die "Failed to install requirements."
 
 # Create user if necessary

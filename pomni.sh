@@ -485,22 +485,26 @@ EOF
 # lfub
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/lfub"' <<'EOF'
 #!/bin/sh
+# lf with image previews via ueberzugpp.
 set -e
 cleanup() {
-    exec 3>&-
-	rm "$FIFO_UEBERZUG"
+	exec 3>&-
+	if [ -n "$UEBERZUG_PID" ]; then
+		kill "$UEBERZUG_PID" 2>/dev/null || true
+	fi
+	rm -f "$FIFO_UEBERZUG"
 }
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-	lf "$@"
-else
-	[ ! -d "$HOME/.cache/lf" ] && mkdir -p "$HOME/.cache/lf"
-	export FIFO_UEBERZUG="$HOME/.cache/lf/ueberzug-$$"
-	mkfifo "$FIFO_UEBERZUG"
-	ueberzug layer -s <"$FIFO_UEBERZUG" -p json &
-	exec 3>"$FIFO_UEBERZUG"
-	trap cleanup HUP INT QUIT TERM PWR EXIT
-	lf "$@" 3>&-
+	exec lf "$@"
 fi
+mkdir -p "$HOME/.cache/lf"
+export FIFO_UEBERZUG="$HOME/.cache/lf/ueberzug-$$"
+mkfifo "$FIFO_UEBERZUG"
+trap cleanup HUP INT QUIT TERM EXIT
+ueberzugpp layer -s -o x11 -p json <"$FIFO_UEBERZUG" &
+UEBERZUG_PID=$!
+exec 3>"$FIFO_UEBERZUG"
+lf "$@" 3>&-
 EOF
 chmod +x "$home"/.local/bin/lfub
 sudo -u "$name" mkdir -p "$home/.config/lf"
@@ -513,42 +517,38 @@ EOF
 chmod +x "$home"/.config/lf/cleaner
 sudo -u "$name" sh -c 'cat > "$HOME/.config/lf/scope"' <<'EOF'
 #!/bin/sh
+# lf previewer. Args: $1 file, $2 width, $3 height, $4 x, $5 y
 set -C -f
 IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}"
+mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/lf"
+# Sets $CACHE to a per-file thumbnail path (without extension).
+cache() {
+	CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)"
+	CACHE="${CACHE%% *}"
+}
+# image PATH W H X Y ORIGINAL
 image() {
-	if [ -f "$1" ] && [ -n "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && command -V ueberzug >/dev/null 2>&1; then
+	if [ -f "$1" ] && [ -n "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ -n "$FIFO_UEBERZUG" ]; then
 		printf '{"action": "add", "identifier": "PREVIEW", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' "$4" "$5" "$(($2-1))" "$(($3-1))" "$1" > "$FIFO_UEBERZUG"
 	else
-		mediainfo "$6"
+		ffprobe -hide_banner "$6" 2>&1
 	fi
 }
 case "$(file --dereference --brief --mime-type -- "$1")" in
-	image/avif) CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)" CACHE="${CACHE%% *}"
-		[ ! -f "$CACHE.jpg" ] && magick "$1" "$CACHE.jpg"
-		image "$CACHE.jpg" "$2" "$3" "$4" "$5" "$1" ;;
-	image/vnd.djvu)
-		CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)" CACHE="${CACHE%% *}"
-		image "$CACHE.jpg" "$2" "$3" "$4" "$5" "$1" ;;
-	image/svg+xml)
-		CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)" CACHE="${CACHE%% *}"
-		image "$CACHE.png" "$2" "$3" "$4" "$5" "$1" ;;
-	image/x-xcf)
-		CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)" CACHE="${CACHE%% *}"
-		[ ! -f "$CACHE.jpg" ] && magick "$1[0]" "$CACHE.jpg"
-		image "$CACHE.jpg" "$2" "$3" "$4" "$5" "$1" ;;
+	image/svg+xml) head -n 100 -- "$1" ;;
+	image/vnd.djvu | image/x-xcf) file --brief -- "$1" ;;
 	image/*) image "$1" "$2" "$3" "$4" "$5" "$1" ;;
-	text/troff) man ./ "$1" | col -b ;;
-	video/* )
-		CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)" CACHE="${CACHE%% *}"
-		[ ! -f "$CACHE" ] && ffmpegthumbnailer -i "$1" -o "$CACHE" -s 0
-		image "$CACHE" "$2" "$3" "$4" "$5" "$1" ;;
-		CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)" CACHE="${CACHE%% *}"
+	video/*)
+		cache "$1"
+		[ -f "$CACHE.jpg" ] || ffmpegthumbnailer -i "$1" -o "$CACHE.jpg" -s 0 >/dev/null 2>&1
 		image "$CACHE.jpg" "$2" "$3" "$4" "$5" "$1" ;;
-	*/epub+zip|*/mobi*)
-		CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/lf/thumb.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$1")" | md5sum)" CACHE="${CACHE%% *}"
-		image "$CACHE.jpg" "$2" "$3" "$4" "$5" "$1" ;;
-	application/pgp-encrypted) gpg -d -- "$1" ;;
+	audio/*) ffprobe -hide_banner "$1" 2>&1 ;;
+	text/* | */xml | application/json | application/x-ndjson) head -n 200 -- "$1" ;;
+	application/zip | application/x-tar | application/gzip | application/x-xz | application/zstd | application/x-bzip2 | application/x-7z-compressed | application/vnd.rar)
+		bsdtar -tf "$1" ;;
+	*) file --brief -- "$1" ;;
 esac
+# Non-zero exit tells lf not to cache the preview, so images are redrawn.
 exit 1
 EOF
 chmod +x "$home"/.config/lf/scope
@@ -557,38 +557,21 @@ set shellopts '-eu'
 set ifs "\n"
 set scrolloff 10
 set period 1
-set hiddenfiles ".*:*.aux:*.log:*.bbl:*.bcf:*.blg:*.run.xml"
+set hiddenfiles ".*"
 set cleaner '~/.config/lf/cleaner'
 set previewer '~/.config/lf/scope'
 set autoquit true
 cmd open ${{
-    case $(file --mime-type "$(readlink -f $f)" -b) in
-	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet) localc $fx ;;
-        text/*|application/json|inode/x-empty|application/x-subrip) $EDITOR $fx;;
-	image/x-xcf) setsid -f gimp $f >/dev/null 2>&1 ;;
-	image/svg+xml) display -- $f ;;
-	image/*) setsid -f nsxiv -a $f | grep -i "\.\(png\|jpg\|jpeg\|gif\|webp\|avif\|tif\|ico\)\(_large\)*$" |
-		setsid -f nsxiv -aio 2>/dev/null | while read -r file; do
-			[ -z "$file" ] && continue
-			lf -remote "send select \"$file\""
-			lf -remote "send toggle"
-		done &
-		;;
-	audio/*|video/x-ms-asf) mpv --audio-display=no $f ;;
-	video/*) setsid -f mpv $f -quiet >/dev/null 2>&1 ;;
-	application/pgp-encrypted) $EDITOR $fx ;;
-	application/vnd.openxmlformats-officedocument.wordprocessingml.document|application/vnd.oasis.opendocument.text|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|application/vnd.oasis.opendocument.spreadsheet|application/vnd.oasis.opendocument.spreadsheet-template|application/vnd.openxmlformats-officedocument.presentationml.presentation|application/vnd.oasis.opendocument.presentation-template|application/vnd.oasis.opendocument.presentation|application/vnd.ms-powerpoint|application/vnd.oasis.opendocument.graphics|application/vnd.oasis.opendocument.graphics-template|application/vnd.oasis.opendocument.formula|application/vnd.oasis.opendocument.database) setsid -f libreoffice $fx >/dev/null 2>&1 ;;
-        application/octet-stream) case ${f##*.} in
-			doc|docx|xls|xlsx|ppt|pptx) setsid -f libreoffice $fx >/dev/null 2>&1 ;;
-			ghw) setsid -f gtkwave $f >/dev/null 2>&1 ;;
-			ts) setsid -f mpv $f -quiet >/dev/null 2>&1 ;;
-			*) setsid -f zathura $fx >/dev/null 2>&1 ;;
-	   	esac ;;
-	*) for f in $fx; do setsid -f $OPENER $f >/dev/null 2>&1; done;;
-    esac
+	case "$(file --mime-type -b "$(readlink -f "$f")")" in
+		text/*|application/json|inode/x-empty|application/x-subrip) ${EDITOR:-vi} $fx ;;
+		application/pdf|image/svg+xml) setsid -f librewolf $fx >/dev/null 2>&1 ;;
+		image/*) setsid -f nsxiv -a -- $fx >/dev/null 2>&1 ;;
+		audio/*) mpv --audio-display=no $fx ;;
+		video/*) setsid -f mpv -quiet $fx >/dev/null 2>&1 ;;
+		*) notify-send "lf" "No opener for: $(file -b "$f")" ;;
+	esac
 }}
-cmd setbg "$1"
-map b $setbg $f
+map b $setbg "$f"
 map m $mpv $f
 EOF
 

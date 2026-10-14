@@ -458,10 +458,10 @@ sudo -u "$name" curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
 sudo -u "$name" mkdir -p "$home/.local/share"
 sudo -u "$name" ln -sf "$home/Pictures/wallpaper/eva.jpg" "$home/.local/share/bg"
 sudo -u "$name" mkdir -p "$home/.config/fastfetch"
-sudo -u "$name" sh -c 'cat > "$HOME/config/fastfetch/config.jsonc"' <<'EOF'
+sudo -u "$name" sh -c 'cat > "$HOME/.config/fastfetch/config.jsonc"' <<'EOF'
 { "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json", "modules": [ "title", "separator", "os", "kernel", "uptime", "packages", "cpu", "wm", "memory", "colors" ] }
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/config/fastfetch/rose_ascii.txt"' <<'EOF'
+sudo -u "$name" sh -c 'cat > "$HOME/.config/fastfetch/rose_ascii.txt"' <<'EOF'
 $1           ,
 $1       .--'|}
 $1      /    /}}

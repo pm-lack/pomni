@@ -257,6 +257,13 @@ whiptail \
 	8 50
 pacman -S --needed --noconfirm wireplumber pipewire-pulse pulsemixer >/dev/null 2>&1 ||
 	die "Failed to install audio."
+sudo -u "$name" mkdir -p "$home/.config/pipewire/pipewire.conf.d"
+sudo -u "$name" sh -c 'cat > "$HOME/.config/pipewire/pipewire.conf.d/user-session.conf"' <<'EOF'
+context.exec = [
+    { path = "/usr/bin/wireplumber" args = "" condition = [ { exec.session-manager = null } { exec.session-manager = true } ] }
+    { path = "/usr/bin/pipewire" args = "-c pipewire-pulse.conf" condition = [ { exec.pipewire-pulse = null } { exec.pipewire-pulse = true } ] }
+]
+EOF
 
 # X dependencies 
 whiptail \

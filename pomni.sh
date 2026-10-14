@@ -298,6 +298,13 @@ for program in $autostart; do
 	pidof -sx "$program" || "$program" &
 	
 done >/dev/null 2>&1
+#Volume block fix
+(
+while ! pidof -sx dwmblocks >/dev/null 2>&1; do
+sleep 1
+done
+pkill -RTMIN+10 dwmblocks
+) &
 EOF
 
 # Tamzen font

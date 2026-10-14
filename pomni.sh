@@ -155,7 +155,6 @@ printf '%s\n' '%wheel ALL=(ALL) NOPASSWD: ALL' \
 chmod 440 /etc/sudoers.d/wheel
 
 # Zsh config
-# Fast syntax highlighting
 git clone --depth 1 https://github.com/zdharma-continuum/fast-syntax-highlighting /usr/share/zsh/plugins/fast-syntax-highlighting >/dev/null 2>&1 ||
 		die "Failed to clone fast-syntax-highlighting."
 
@@ -257,6 +256,8 @@ whiptail \
 	8 50
 pacman -S --needed --noconfirm wireplumber pipewire-pulse pulsemixer >/dev/null 2>&1 ||
 	die "Failed to install audio."
+
+# Create pipewire exec
 sudo -u "$name" mkdir -p "$home/.config/pipewire/pipewire.conf.d"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/pipewire/pipewire.conf.d/user-session.conf"' <<'EOF'
 context.exec = [

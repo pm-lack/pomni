@@ -424,7 +424,7 @@ printf '%s\n' "${status:-off}"
 EOF
 
 # Make blocks runable
-chmod +x /home/$name/.local/bin/statusbar/sb-*
+chmod +x "$home"/.local/bin/statusbar/sb-*
 
 # Finished
 whiptail \

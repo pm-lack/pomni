@@ -510,7 +510,7 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/settings.ini"' <<'EOF'
 [Settings]
 gtk-theme-name=adw-gtk3-dark
 gtk-icon-theme-name=Adwaita
-gtk-font-name=Tamzen 10
+gtk-font-name=Tamzen 11
 gtk-cursor-theme-size=0
 gtk-toolbar-style=GTK_TOOLBAR_TEXT
 gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR

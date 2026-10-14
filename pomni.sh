@@ -439,6 +439,8 @@ whiptail \
 
 pacman -S --needed --noconfirm lf ueberzugpp libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf fastfetch >/dev/null 2>&1 ||
 	die "Failed to install utilities."
+
+# Wallpaper
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'
 #!/bin/sh
 # Location of link to wallpaper link.
@@ -457,6 +459,8 @@ sudo -u "$name" curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
 	"https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/eva.jpg"
 sudo -u "$name" mkdir -p "$home/.local/share"
 sudo -u "$name" ln -sf "$home/Pictures/wallpaper/eva.jpg" "$home/.local/share/bg"
+
+# Fastfetch
 sudo -u "$name" mkdir -p "$home/.config/fastfetch"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/fastfetch/config.jsonc"' <<'EOF'
 { "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json", "modules": [ "title", "separator", "os", "kernel", "uptime", "packages", "cpu", "wm", "memory", "colors" ] }
@@ -473,6 +477,27 @@ $1  |\_\\/
 $1  \__/\\
 $1       \\
 $1        \|
+EOF
+
+# lfub
+sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/lfub"' <<'EOF'
+#!/bin/sh
+set -e
+cleanup() {
+    exec 3>&-
+	rm "$FIFO_UEBERZUG"
+}
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+	lf "$@"
+else
+	[ ! -d "$HOME/.cache/lf" ] && mkdir -p "$HOME/.cache/lf"
+	export FIFO_UEBERZUG="$HOME/.cache/lf/ueberzug-$$"
+	mkfifo "$FIFO_UEBERZUG"
+	ueberzug layer -s <"$FIFO_UEBERZUG" -p json &
+	exec 3>"$FIFO_UEBERZUG"
+	trap cleanup HUP INT QUIT TERM PWR EXIT
+	lf "$@" 3>&-
+fi
 EOF
 
 # Finished

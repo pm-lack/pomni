@@ -249,6 +249,15 @@ pacman -Syyu --noconfirm >/dev/null 2>&1 ||
 pacman -S --needed --noconfirm xlibre-meta >/dev/null 2>&1 ||
 	die "Failed to install XLibre."
 
+# Install audio
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Setting up audio..." \
+	8 50
+pacman -S --needed --noconfirm wireplumber pipewire-pulse pulsemixer >/dev/null 2>&1 ||
+	die "Failed to install audio."
+
 # X dependencies 
 whiptail \
 	--title "Installing" \
@@ -275,7 +284,7 @@ EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
 xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
-autostart="xcompmgr"
+autostart="xcompmgr pipewire"
 
 for program in $autostart; do
 	pidof -sx "$program" || "$program" &

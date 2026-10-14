@@ -361,6 +361,7 @@ whiptail \
 	--infobox \
 	"Creating blocks..." \
 	8 50
+sleep 1
 sudo -u "$name" mkdir -p "$home/.local/bin/statusbar"
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-volume"' <<'EOF'
 #!/bin/sh

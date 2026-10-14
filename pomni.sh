@@ -392,8 +392,38 @@ sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'
 #!/bin/sh
 date '+[%m-%d %H:%M]'
 EOF
+sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-internet"' <<'EOF'
+#!/bin/sh
+case $BLOCK_BUTTON in
+1) "$TERMINAL" -e nmtui; pkill -RTMIN+4 "${STATUSBAR:-dwmblocks}" ;;
+3) notify-send "internet status" "click: open NetworkManager
+wifi: wireless signal strength (%)
+eth: wired connection
+off: no active connection" ;;
+6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+wifi=""
+ethernet=""
+nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device status 2>/dev/null |
+while IFS=: read -r device type state connection; do
+case "$type:$state" in
+wifi)
+signal=$(nmcli -t -f IN-USE,SIGNAL device wifi list |
+awk -F: '$1 == "*" { print $2; exit }')
+printf '%s\n' "${signal:-0}%" > /tmp/sb-internet-wifi
+;;
+ethernet)
+printf '%s\n' "eth" > /tmp/sb-internet-ethernet
+;;
+esac
+done
+wifi=$(cat /tmp/sb-internet-wifi 2>/dev/null)
+ethernet=$(cat /tmp/sb-internet-ethernet 2>/dev/null)
+status="${wifi:+$wifi }${ethernet:+$ethernet}"
+printf '%s\n' "${status:-off}"
+EOF
 
-# Make scripts runable
+# Make blocks runable
 chmod +x /home/$name/.local/bin/statusbar/sb-*
 
 # Finished

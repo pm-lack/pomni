@@ -55,7 +55,7 @@ whiptail \
 	--fullbuttons \
 	--msgbox \
 	"Welcome!\n\nPomni is a minimal Artix setup script designed to install a basic opinionated dwm environment. This will make changes to your system." \
-	12 61 || exit 1
+	13 61 || exit 1
 
 # User creation
 name=$(whiptail \

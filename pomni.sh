@@ -378,6 +378,13 @@ vol="${vol#Volume: }"
 vol="$(printf "%.0f" "$(printf '%s\n' "$vol" | awk '{printf "%f", $1 * 100}')")"
 echo "[vol:$vol%]"
 EOF
+sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'
+#!/bin/sh
+date '+[%m-%d %H:%M]'
+EOF
+
+# Make block runable
+chmod +x "$home/.local/bin/statusbar/*"
 
 # Finished
 whiptail \

@@ -440,7 +440,7 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf fastfetch >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf fastfetch >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 
 # Wallpaper
@@ -501,6 +501,35 @@ else
 	trap cleanup HUP INT QUIT TERM PWR EXIT
 	lf "$@" 3>&-
 fi
+EOF
+
+# GTK
+sudo -u "$name" mkdir -p "$home/.config/gtk-3.0"
+sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/settings.ini"' <<'EOF'
+[Settings]
+gtk-theme-name=adw-gtk3-dark
+gtk-icon-theme-name=Adwaita
+gtk-font-name=Tamzen 10
+gtk-cursor-theme-size=0
+gtk-toolbar-style=GTK_TOOLBAR_TEXT
+gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
+gtk-button-images=0
+gtk-menu-images=1
+gtk-enable-event-sounds=1
+gtk-enable-input-feedback-sounds=1
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintfull
+gtk-xft-rgba=rgb
+gtk-cursor-theme-name=Adwaita
+EOF
+sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/gtk.css"' <<'EOF'
+@define-color theme_bg_color #424242;
+@define-color theme_base_color #424242;
+@define-color theme_fg_color #e4e4e4;
+@define-color theme_text_color #e4e4e4;
+@define-color theme_selected_bg_color #575757;
+@define-color theme_selected_fg_color #e4e4e4;
 EOF
 
 # Finished

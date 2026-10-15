@@ -72,7 +72,7 @@ Audio
 - ModShift+m,               Toggle mute
 - Mod+F4,                   Open pulsemixer
 
-Screenshots (saved to ~/Pictures)
+Screenshot
 - Mod+Print,                Screenshot of the full screen
 - ModShift+Print,           Screenshot of a selected region
 

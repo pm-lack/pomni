@@ -36,8 +36,9 @@ Common
 - Mod+f,                    Toggle fullscreen
 - Mod+b,                    Toggle the status bar
 - Alt+Tab,                  Cycle through windows
+- ModCtrl+Shift+q,          Quit dwm
 
-Layout and master area
+Layout & Navigation
 - Mod+y,                    Toggle between dwindle and half-screen dwindle layouts
 - Mod+Backspace,            Toggle blank side
 - ModShift+Backspace,       Toggle blank side
@@ -45,26 +46,22 @@ Layout and master area
 - ModShift+o,               Decrease number of master windows
 - Mod+h,                    Shrink master area
 - Mod+l,                    Grow master area
-
-Tags
 - Mod+[1-9],                View tag
 - Mod+0,                    View all tags
 - Mod+Tab,                  Go back to the previously viewed tag
 - ModShift+[1-9],           Move focused window to tag
 - ModShift+0,               Make focused window visible on all tags
 - ModCtrl+[1-9],            Move focused window to tag and follow to it
-
-Monitors
 - Mod+Left,                 Focus previous monitor
 - Mod+Right,                Focus next monitor
 - ModShift+Left,            Send window to previous monitor
 - ModShift+Right,           Send window to next monitor
 
-Programs
-- Mod+r,                    File manager in terminal (lfub)
-- Mod+t,                    Thunar file manager
-- ModShift+b,               Browser (librewolf)
-- ModShift+w,               Network manager (sudo nmtui in terminal)
+Basic Programs
+- Mod+r,                    lf (terminal-based file browser/manager)
+- Mod+t,                    Thunar (gui file explorer)
+- ModShift+b,               Web Browser (librewolf)
+- ModShift+w,               Nmtui (for connecting to wireless internet)
 - Mod+F11,                  Webcam preview (mpv)
 
 Audio
@@ -78,6 +75,3 @@ Audio
 Screenshots (saved to ~/Pictures)
 - Mod+Print,                Screenshot of the full screen
 - ModShift+Print,           Screenshot of a selected region
-
-Session
-- ModCtrl+Shift+q,          Quit dwm

@@ -25,6 +25,7 @@ Pomni must be run as root.
 
 ## Post Install
 Librewolf may need to be opened and closed for extensions to start working.  
+
 Add your monitor details to your xinitrc (in ~/.config/x11/) above dbus. Example:  
 ```
 xrandr \

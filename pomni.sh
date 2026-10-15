@@ -524,6 +524,8 @@ curl -fsSL \
 { printf '\n'; cat "$TMPDIR/betterfox-user.js"; } |
 	sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir"
 
+echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
+
 # Install utilities
 whiptail \
 	--title "Installing" \

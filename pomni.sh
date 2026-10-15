@@ -442,24 +442,15 @@ whiptail \
 	8 50
 pacman -S --needed --noconfirm librewolf >/dev/null 2>&1 ||
 	die "Failed to install LibreWolf."
-
-lwlog=/tmp/pomni-librewolf.log
+lwdir="$home/.config/librewolf/librewolf"
 
 # Start LibreWolf headless once so it generates a profile
 sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
-	librewolf --headless >"$lwlog" 2>&1 &
+	librewolf --headless >/dev/null 2>&1 &
 
-# Wait for profiles.ini in either the XDG or the legacy location
-lwdir=""
+# Wait for the profile to be generated
 i=0
-while [ "$i" -lt 30 ]; do
-	for d in "$home/.config/librewolf/librewolf" "$home/.librewolf"; do
-		if [ -f "$d/profiles.ini" ]; then
-			lwdir="$d"
-			break
-		fi
-	done
-	[ -n "$lwdir" ] && break
+while [ "$i" -lt 30 ] && [ ! -f "$lwdir/profiles.ini" ]; do
 	i=$((i + 1))
 	sleep 1
 done
@@ -468,33 +459,27 @@ done
 sleep 2
 pkill -u "$name" -f librewolf
 sleep 1
+[ -f "$lwdir/profiles.ini" ] ||
+	die "LibreWolf did not generate a profile."
 
-[ -n "$lwdir" ] ||
-	die "LibreWolf created no profiles.ini. See $lwlog"
-
-# Prefer the profile the install actually uses, else the first one listed
+# Prefer the profile this install actually uses, else the first one listed
 profile=$(sed -n '/^\[Install/,/^\[Profile/ s/^Default=//p' "$lwdir/profiles.ini" | head -n 1)
 [ -n "$profile" ] ||
 	profile=$(sed -n 's/^Path=//p' "$lwdir/profiles.ini" | head -n 1)
-
 case "$profile" in
 	/*) pdir="$profile" ;;
 	*)  pdir="$lwdir/$profile" ;;
 esac
-
 [ -n "$profile" ] && [ -d "$pdir" ] ||
-	die "Could not locate the LibreWolf profile. See $lwlog"
-
+	die "Could not locate the LibreWolf profile."
 sudo -u "$name" mkdir -p "$pdir/chrome"
 sudo -u "$name" curl -fsSL \
 	-o "$pdir/chrome/userChrome.css" \
 	https://raw.githubusercontent.com/khuedoan/one-line-firefox/master/userChrome.css ||
 	die "Failed to download userChrome.css."
-
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 EOF
-
 curl -fsSL \
 	-o "$TMPDIR/betterfox-user.js" \
 	https://raw.githubusercontent.com/pm-lack/pm-betterfox.js/refs/heads/main/user.js ||

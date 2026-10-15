@@ -10,7 +10,7 @@ What it does:
 - Installs utilities like lf (with image previews via ueberzugpp), nsxiv, mpv, Thunar, dunst, maim, xcompmgr, unclutter and more
 - Installs the [Tamzen](https://github.com/sunaku/tamzen-font) bitmap font, applies a dark GTK3 theme, and sets a wallpaper
 - Appends a hosts-based ad/tracker [blocklist](https://github.com/pm-lack/hosts) to /etc/hosts
-All this WITHOUT the AUR! 🎉
+- All this WITHOUT the AUR! 🎉
 
 ## Install
 

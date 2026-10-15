@@ -459,6 +459,7 @@ done
 sleep 2
 pkill -u "$name" -f librewolf
 sleep 1
+
 [ -f "$lwdir/profiles.ini" ] ||
 	die "LibreWolf did not generate a profile."
 
@@ -466,20 +467,32 @@ sleep 1
 profile=$(sed -n '/^\[Install/,/^\[Profile/ s/^Default=//p' "$lwdir/profiles.ini" | head -n 1)
 [ -n "$profile" ] ||
 	profile=$(sed -n 's/^Path=//p' "$lwdir/profiles.ini" | head -n 1)
+
 case "$profile" in
 	/*) pdir="$profile" ;;
 	*)  pdir="$lwdir/$profile" ;;
 esac
+
 [ -n "$profile" ] && [ -d "$pdir" ] ||
 	die "Could not locate the LibreWolf profile."
-sudo -u "$name" mkdir -p "$pdir/chrome"
-sudo -u "$name" curl -fsSL \
-	-o "$pdir/chrome/userChrome.css" \
-	https://raw.githubusercontent.com/khuedoan/one-line-firefox/master/userChrome.css ||
-	die "Failed to download userChrome.css."
+
+# FirefoxCSS theme
+GIT_TERMINAL_PROMPT=0 git clone --depth 1 \
+	https://github.com/Bali10050/FirefoxCSS "$TMPDIR/FirefoxCSS" >/dev/null 2>&1 ||
+	die "Failed to clone FirefoxCSS."
+mkdir -p "$pdir/chrome"
+cp -a "$TMPDIR/FirefoxCSS/chrome/." "$pdir/chrome/" ||
+	die "Failed to copy the FirefoxCSS theme."
+chown -R "$name": "$pdir/chrome"
+
+# Prefs the theme needs
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+user_pref("svg.context-properties.content.enabled", true);
+user_pref("layout.css.has-selector.enabled", true);
 EOF
+
+# Betterfox-based prefs
 curl -fsSL \
 	-o "$TMPDIR/betterfox-user.js" \
 	https://raw.githubusercontent.com/pm-lack/pm-betterfox.js/refs/heads/main/user.js ||

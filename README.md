@@ -75,3 +75,7 @@ Audio
 Screenshots (saved to ~/Pictures)
 - Mod+Print,                Screenshot of the full screen
 - ModShift+Print,           Screenshot of a selected region
+
+## Credit
+- Courtesies to [Luke Smith](https://lukesmith.xyz/) and [LARBS](https://larbs.xyz/)
+- [Stein Gunnar Bakkeby](https://github.com/bakkeby/) and his [DWM patches](https://github.com/bakkeby/patches/wiki)

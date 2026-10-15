@@ -23,3 +23,61 @@ As root;
 ```
 
 ## Keybinds
+Common
+- Mod+Enter,                Spawn terminal
+- Mod+q,                    Close window
+- ModShift+q,               Close window
+- Mod+d,                    dmenu
+- ModShift+d,               dmenu
+- Mod+j,                    Cycle thru windows by stack order
+- Mod+k,                    Cycle thru windows by reverse stack order
+- Mod+Space,                Swap focused window with master (zoom)
+- ModShift+Space,           Toggle floating for the focused window
+- Mod+f,                    Toggle fullscreen
+- Mod+b,                    Toggle the status bar
+- Alt+Tab,                  Cycle through windows
+
+Layout and master area
+- Mod+y,                    Toggle between dwindle and half-screen dwindle layouts
+- Mod+Backspace,            Toggle blank side
+- ModShift+Backspace,       Toggle blank side
+- Mod+o,                    Increase number of master windows
+- ModShift+o,               Decrease number of master windows
+- Mod+h,                    Shrink master area
+- Mod+l,                    Grow master area
+
+Tags
+- Mod+[1-9],                View tag
+- Mod+0,                    View all tags
+- Mod+Tab,                  Go back to the previously viewed tag
+- ModShift+[1-9],           Move focused window to tag
+- ModShift+0,               Make focused window visible on all tags
+- ModCtrl+[1-9],            Move focused window to tag and follow to it
+
+Monitors
+- Mod+Left,                 Focus previous monitor
+- Mod+Right,                Focus next monitor
+- ModShift+Left,            Send window to previous monitor
+- ModShift+Right,           Send window to next monitor
+
+Programs
+- Mod+r,                    File manager in terminal (lfub)
+- Mod+t,                    Thunar file manager
+- ModShift+b,               Browser (librewolf)
+- ModShift+w,               Network manager (sudo nmtui in terminal)
+- Mod+F11,                  Webcam preview (mpv)
+
+Audio
+- Mod+-,                    Volume down 5%
+- ModShift+-,               Volume down 15%
+- Mod+=,                    Volume up 5%
+- ModShift+=,               Volume up 15%
+- ModShift+m,               Toggle mute
+- Mod+F4,                   Open pulsemixer
+
+Screenshots (saved to ~/Pictures)
+- Mod+Print,                Screenshot of the full screen
+- ModShift+Print,           Screenshot of a selected region
+
+Session
+- ModCtrl+Shift+q,          Quit dwm

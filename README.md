@@ -16,7 +16,7 @@ All this WITHOUT the AUR! 🎉
 
 ## Install
 
-Pomni must be run as root.
+Pomni must be run as root. A network connection is required.
 ```
 # curl -LO https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/pomni.sh
 # chmod +x pomni.sh

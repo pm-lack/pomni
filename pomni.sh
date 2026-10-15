@@ -485,11 +485,25 @@ cp -a "$TMPDIR/FirefoxCSS/chrome/." "$pdir/chrome/" ||
 	die "Failed to copy the FirefoxCSS theme."
 chown -R "$name": "$pdir/chrome"
 
+# Extensions (sideloaded into the profile)
+mkdir -p "$pdir/extensions"
+while read -r slug id; do
+	curl -fsSL \
+		-o "$pdir/extensions/$id.xpi" \
+		"https://addons.mozilla.org/firefox/downloads/latest/$slug/latest.xpi" ||
+		die "Failed to download the $slug extension."
+done <<'EOF'
+darkreader addon@darkreader.org
+dollchan_extension dollchan_extension@dollchan.net
+EOF
+chown -R "$name": "$pdir/extensions"
+
 # Prefs the theme needs
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("svg.context-properties.content.enabled", true);
 user_pref("layout.css.has-selector.enabled", true);
+user_pref("extensions.autoDisableScopes", 0);
 EOF
 
 # Betterfox-based prefs

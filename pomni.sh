@@ -430,6 +430,15 @@ ethernet=$(cat /tmp/sb-internet-ethernet 2>/dev/null)
 status="${wifi:+$wifi }${ethernet:+$ethernet}"
 printf '%s\n' "${status:-off}"
 EOF
+sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'
+BAT_PATH="/sys/class/power_supply/BAT0"
+if [ -f "$BAT_PATH/capacity" ]; then
+    PERCENT=$(cat "$BAT_PATH/capacity")
+    echo "[bat:${PERCENT}%]"
+else
+    echo "[bat:N/A]"
+fi
+EOF
 
 # Make blocks runable
 chmod +x "$home"/.local/bin/statusbar/sb-*

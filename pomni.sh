@@ -695,6 +695,28 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/gtk.css"' <<'EOF'
 @define-color theme_selected_fg_color #e4e4e4;
 EOF
 
+# Host blocker
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Setting up host blocker..." \
+	8 50
+
+curl -fsSL \
+	-o "$TMPDIR/hosts" \
+	https://raw.githubusercontent.com/pm-lack/hosts/refs/heads/master/hosts ||
+	die "Failed to download the hosts file."
+[ -s "$TMPDIR/hosts" ] ||
+	die "The downloaded hosts file is empty."
+
+# Drop any block from a previous run, then append the fresh one
+sed -i '/^# BEGIN pomni hosts$/,/^# END pomni hosts$/d' /etc/hosts
+{
+	printf '\n# BEGIN pomni hosts\n'
+	cat "$TMPDIR/hosts"
+	printf '\n# END pomni hosts\n'
+} >> /etc/hosts
+
 # Finished
 whiptail \
 	--title "Finished" \

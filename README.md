@@ -22,6 +22,15 @@ Pomni must be run as root.
 # sh pomni.sh
 ```
 
+## Post Install
+- Librewolf may need to be opened and closed for extensions to start working.
+- Add your monitor details to your xinitrc above dbus. Example:
+```
+xrandr \
+  --output HDMI-0 --mode 2560x1440 --rate 240 --primary --pos 0x0 \
+  --output DP-0 --mode 2560x1440 --rate 165 --pos 2560x0
+```
+
 ## Keybinds
 Common
 - Mod+Enter,                Spawn terminal

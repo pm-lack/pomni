@@ -438,8 +438,8 @@ chmod +x "$home"/.local/bin/statusbar/sb-*
 whiptail \
 	--title "Installing" \
 	--infobox \
-	"Setting up LibreWolf..." \
-	8 50
+	"Setting up LibreWolf.\n\nThis may take a while..." \
+	9 50
 pacman -S --needed --noconfirm librewolf >/dev/null 2>&1 ||
 	die "Failed to install LibreWolf."
 lwdir="$home/.config/librewolf/librewolf"

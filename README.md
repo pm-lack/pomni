@@ -24,44 +24,44 @@ Pomni must be run as root.
 ```
 
 ## Post Install
-- Librewolf may need to be opened and closed for extensions to start working.
-- Add your monitor details to your xinitrc (in ~/.config/x11/) above dbus. Example:
+Librewolf may need to be opened and closed for extensions to start working.  
+Add your monitor details to your xinitrc (in ~/.config/x11/) above dbus. Example:  
 ```
 xrandr \
   --output HDMI-0 --mode 2560x1440 --rate 240 --primary --pos 0x0 \
   --output DP-0 --mode 2560x1440 --rate 165 --pos 2560x0
 ```
-- Additionally, the default font size is tailored for 1280x800. Given this, you may want to increase the font size depending on your display. Here are some recommendations;
-  - 13-14 for 1080p
-  - 17-18 for 1440p
-  - 26-27 for 2160p
-- Fonts are set in a few different places for a few different applications.
+Additionally, the default font size is tailored for 1280x800. Given this, you may want to increase the font size depending on your display. Here are some recommendations;  
+- 13-14 for 1080p
+- 17-18 for 1440p
+- 26-27 for 2160p
+
+Fonts are set in a few different places for a few different applications.  
 - GTK fonts are set in $HOME/.config/gtk-3.0/settings.ini
   ```
   gtk-font-name=Tamzen 11
   ```
 - suckless software can be modified with their respective config.h files in $HOME/.local/src
-  - dwm
   ```
+  dwm:
   static const char *fonts[]          = { "Misc Tamzen:size=10" };
   static const char dmenufont[]       = "Misc Tamzen:size=10";
-  ```
-  - dmenu
-  ```
+
+  dmenu:
   static char font[] = "Misc Tamzen:size=10";
-  ```
-  - st
-  ```
+
+  st:
   static char *font = "Misc Tamzen:size=10";
   static char *font2[] = {
 	    "Misc Tamzen:size=10"
   ```
-- Then, simply run a ```sudo make clean install``` in their root folders to recompile each.
-- If you are on a laptop, you can uncomment dwmblock's battery line to add a battery status indicator to your bar.
-	- $HOME/.local/src/dwmblocks/config.h (you will need to recompile for this)
-    ```
-    /* {" ",	"sb-battery",	5,	3}, */
-    ```
+- Then, simply run a ```sudo make clean install``` in their root folders to recompile each.  
+
+If you are on a laptop, you can uncomment dwmblock's battery line to add a battery status indicator to your bar.
+- $HOME/.local/src/dwmblocks/config.h (you will need to recompile for this)
+  ```
+  /* {" ",	"sb-battery",	5,	3}, */
+  ```
 
 
 ## Keybinds

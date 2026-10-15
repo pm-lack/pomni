@@ -1,4 +1,5 @@
 ## pm’s Opinionated Minimal Nest Installer (pomni)
+![ScreenShot](https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/screenshot.png)
 Pomni is a post-install setup script intended for use on artix-base-runit.
 What it does:
 - Creates a new user (or reconfigures an existing one), sets the password, adds them to wheel, and sets zsh as the login shell

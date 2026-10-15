@@ -443,39 +443,58 @@ whiptail \
 pacman -S --needed --noconfirm librewolf >/dev/null 2>&1 ||
 	die "Failed to install LibreWolf."
 
+lwlog=/tmp/pomni-librewolf.log
+
 # Start LibreWolf headless once so it generates a profile
-sudo -u "$name" -H librewolf --headless >/dev/null 2>&1 &
-lwdir="$home/.librewolf"
-profile=""
+sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+	librewolf --headless >"$lwlog" 2>&1 &
+
+# Wait for profiles.ini in either the XDG or the legacy location
+lwdir=""
 i=0
-while [ "$i" -lt 20 ]; do
-	if [ -f "$lwdir/profiles.ini" ]; then
-		profile=$(sed -n '/^Default=.*default-default/ s/.*=//p' "$lwdir/profiles.ini")
-		[ -n "$profile" ] && [ -d "$lwdir/$profile" ] && break
-	fi
+while [ "$i" -lt 30 ]; do
+	for d in "$home/.config/librewolf/librewolf" "$home/.librewolf"; do
+		if [ -f "$d/profiles.ini" ]; then
+			lwdir="$d"
+			break
+		fi
+	done
+	[ -n "$lwdir" ] && break
 	i=$((i + 1))
 	sleep 1
 done
 
-# Stop the throwaway instance before touching the profile
-pkill -u "$name" -x librewolf
+# Give it a moment to finish writing, then stop the throwaway instance
+sleep 2
+pkill -u "$name" -f librewolf
 sleep 1
-pdir="$lwdir/$profile"
-if [ -z "$profile" ] || [ ! -d "$pdir" ]; then
-	die "LibreWolf did not generate a profile."
-fi
+
+[ -n "$lwdir" ] ||
+	die "LibreWolf created no profiles.ini. See $lwlog"
+
+# Prefer the profile the install actually uses, else the first one listed
+profile=$(sed -n '/^\[Install/,/^\[Profile/ s/^Default=//p' "$lwdir/profiles.ini" | head -n 1)
+[ -n "$profile" ] ||
+	profile=$(sed -n 's/^Path=//p' "$lwdir/profiles.ini" | head -n 1)
+
+case "$profile" in
+	/*) pdir="$profile" ;;
+	*)  pdir="$lwdir/$profile" ;;
+esac
+
+[ -n "$profile" ] && [ -d "$pdir" ] ||
+	die "Could not locate the LibreWolf profile. See $lwlog"
+
 sudo -u "$name" mkdir -p "$pdir/chrome"
 sudo -u "$name" curl -fsSL \
 	-o "$pdir/chrome/userChrome.css" \
 	https://raw.githubusercontent.com/khuedoan/one-line-firefox/master/userChrome.css ||
 	die "Failed to download userChrome.css."
 
-# Required for userChrome.css to be loaded
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 EOF
 
-# Betterfox-based prefs, appended after the stylesheet pref
 curl -fsSL \
 	-o "$TMPDIR/betterfox-user.js" \
 	https://raw.githubusercontent.com/pm-lack/pm-betterfox.js/refs/heads/main/user.js ||

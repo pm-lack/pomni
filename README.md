@@ -40,7 +40,7 @@ xrandr \
   ```
   gtk-font-name=Tamzen 11
   ```
-- suckless software can be modified with their respective config.h files
+- suckless software can be modified with their respective config.h files in $HOME/.local/src
   - dwm
   ```
   static const char *fonts[]          = { "Misc Tamzen:size=10" };
@@ -56,7 +56,12 @@ xrandr \
   static char *font2[] = {
 	    "Misc Tamzen:size=10"
   ```
-- Then, simply run a ```sudo make clean install``` in each of their root folders.
+- Then, simply run a ```sudo make clean install``` in their root folders to recompile each.
+- If you are on a laptop, you can uncomment dwmblock's battery line to add a battery status indicator to your bar.
+	- $HOME/.local/src/dwmblocks/config.h (you will need to recompile for this)
+    ```
+    /* {" ",	"sb-battery",	5,	3}, */
+    ```
 
 
 ## Keybinds

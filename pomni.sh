@@ -185,6 +185,7 @@ _comp_options+=(globdots)
 # Alias
 alias ll='ls -lah'
 alias susu='sudo su root'
+alias lf='lfub'
 
 # Fetch
 fastfetch -l ~/.config/fastfetch/rose_ascii.txt

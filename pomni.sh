@@ -434,6 +434,44 @@ EOF
 # Make blocks runable
 chmod +x "$home"/.local/bin/statusbar/sb-*
 
+# Install librewolf
+whiptail \
+	--title "Installing" \
+	--infobox \
+	"Setting up librewolf..." \
+	8 50
+pacman -S --needed --noconfirm librewolf>/dev/null 2>&1 ||
+	die "Failed to install utilities."
+# Start LibreWolf headless once so it generates a profile
+sudo -u "$name" -H librewolf --headless >/dev/null 2>&1 &
+lwdir="$home/.librewolf"
+profile=""
+i=0
+while [ "$i" -lt 20 ]; do
+	if [ -f "$lwdir/profiles.ini" ]; then
+		profile=$(sed -n '/^Default=.*default-default/ s/.*=//p' "$lwdir/profiles.ini")
+		[ -n "$profile" ] && [ -d "$lwdir/$profile" ] && break
+	fi
+	i=$((i + 1))
+	sleep 1
+done
+# Stop the throwaway instance before touching the profile
+pkill -u "$name" -x librewolf
+sleep 1
+pdir="$lwdir/$profile"
+if [ -z "$profile" ] || [ ! -d "$pdir" ]; then
+	die "LibreWolf did not generate a profile."
+fi
+sudo -u "$name" mkdir -p "$pdir/chrome"
+sudo -u "$name" curl -fsSL \
+	-o "$pdir/chrome/userChrome.css" \
+	https://raw.githubusercontent.com/khuedoan/one-line-firefox/master/userChrome.css ||
+	die "Failed to download userChrome.css."
+# Required for userChrome.css to be loaded
+sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
+user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+EOF
+
 # Install utilities
 whiptail \
 	--title "Installing" \
@@ -441,7 +479,7 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler librewolf fastfetch >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler fastfetch >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 
 # Wallpaper

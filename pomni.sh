@@ -410,24 +410,29 @@ eth: wired connection
 off: no active connection" ;;
 6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
+
 wifi=""
 ethernet=""
-nmcli -t -f DEVICE,TYPE,STATE,CONNECTION device status 2>/dev/null |
-while IFS=: read -r device type state connection; do
-case "$type:$state" in
-wifi)
-signal=$(nmcli -t -f IN-USE,SIGNAL device wifi list |
-awk -F: '$1 == "*" { print $2; exit }')
-printf '%s\n' "${signal:-0}%" > /tmp/sb-internet-wifi
-;;
-ethernet)
-printf '%s\n' "eth" > /tmp/sb-internet-ethernet
-;;
-esac
+for iface in /sys/class/net/*; do
+	dev=${iface##*/}
+	# Skip loopback and virtual interfaces (docker, tun, bridges, ...)
+	[ "$dev" = lo ] && continue
+	[ -e "$iface/device" ] || continue
+	[ "$(cat "$iface/operstate" 2>/dev/null)" = up ] || continue
+	if [ -d "$iface/wireless" ] || [ -d "$iface/phy80211" ]; then
+		signal=$(awk -v d="$dev:" '$1 == d {
+			q = $3; sub(/\./, "", q)
+			s = int(q * 100 / 70); if (s > 100) s = 100
+			print s; exit
+		}' /proc/net/wireless 2>/dev/null)
+		wifi="${signal:-0}%"
+	else
+		ethernet="eth"
+	fi
 done
-wifi=$(cat /tmp/sb-internet-wifi 2>/dev/null)
-ethernet=$(cat /tmp/sb-internet-ethernet 2>/dev/null)
-status="${wifi:+$wifi }${ethernet:+$ethernet}"
+
+status="$wifi"
+[ -n "$ethernet" ] && status="${status:+$status }$ethernet"
 printf '%s\n' "${status:-off}"
 EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'

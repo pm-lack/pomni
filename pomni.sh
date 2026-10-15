@@ -442,6 +442,7 @@ whiptail \
 	8 50
 pacman -S --needed --noconfirm librewolf>/dev/null 2>&1 ||
 	die "Failed to install utilities."
+
 # Start LibreWolf headless once so it generates a profile
 sudo -u "$name" -H librewolf --headless >/dev/null 2>&1 &
 lwdir="$home/.librewolf"
@@ -455,6 +456,7 @@ while [ "$i" -lt 20 ]; do
 	i=$((i + 1))
 	sleep 1
 done
+
 # Stop the throwaway instance before touching the profile
 pkill -u "$name" -x librewolf
 sleep 1
@@ -467,10 +469,19 @@ sudo -u "$name" curl -fsSL \
 	-o "$pdir/chrome/userChrome.css" \
 	https://raw.githubusercontent.com/khuedoan/one-line-firefox/master/userChrome.css ||
 	die "Failed to download userChrome.css."
+
 # Required for userChrome.css to be loaded
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 EOF
+
+# Betterfox-based prefs, appended after the stylesheet pref
+curl -fsSL \
+	-o "$TMPDIR/betterfox-user.js" \
+	https://raw.githubusercontent.com/pm-lack/pm-betterfox.js/refs/heads/main/user.js ||
+	die "Failed to download the LibreWolf user.js."
+{ printf '\n'; cat "$TMPDIR/betterfox-user.js"; } |
+	sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir"
 
 # Install utilities
 whiptail \

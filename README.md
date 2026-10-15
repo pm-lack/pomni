@@ -38,11 +38,11 @@ Additionally, the default font size is tailored for 1280x800. Given this, you ma
 - 26-27 for 2160p
 
 Fonts are set in a few different places for a few different applications.  
-- GTK fonts are set in $HOME/.config/gtk-3.0/settings.ini
+- GTK fonts are set in ~/.config/gtk-3.0/settings.ini
   ```
   gtk-font-name=Tamzen 11
   ```
-- suckless software can be modified with their respective config.h files in $HOME/.local/src
+- suckless software can be modified with their respective config.h files in ~/.local/src
   ```
   dwm:
   static const char *fonts[]          = { "Misc Tamzen:size=10" };
@@ -58,11 +58,10 @@ Fonts are set in a few different places for a few different applications.
   ```
 - Then, simply run a ```sudo make clean install``` in their root folders to recompile each.  
 
-If you are on a laptop, you can uncomment dwmblock's battery line to add a battery status indicator to your bar.
-- $HOME/.local/src/dwmblocks/config.h (you will need to recompile for this)
-  ```
-  /* {" ",	"sb-battery",	5,	3}, */
-  ```
+If you are on a laptop, you can uncomment dwmblock's battery line in its config.h (in ~/.local/src/dwmblocks/) to add a battery status indicator to your bar. You will need to recompile to apply this.
+```
+/* {" ",	"sb-battery",	5,	3}, */
+```
 
 
 ## Keybinds

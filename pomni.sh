@@ -531,7 +531,7 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer mpv maim unclutter xclip thunar tumbler fastfetch >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim unclutter xclip thunar tumbler fastfetch >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 
 # Wallpaper

@@ -42,7 +42,7 @@ Fonts are set in a few different places for a few different applications.
   ```
   gtk-font-name=Tamzen 11
   ```
-- suckless software can be modified with their respective config.h files in ~/.local/src
+- Suckless software will need to be recompiled to be changed. They can be found in ~/.local/src. Run ```sudo make clean install``` in their root folders to recompile each after changing their config.h files.
   ```
   dwm:
   static const char *fonts[]          = { "Misc Tamzen:size=10" };
@@ -56,7 +56,6 @@ Fonts are set in a few different places for a few different applications.
   static char *font2[] = {
 	    "Misc Tamzen:size=10"
   ```
-- Then, simply run a ```sudo make clean install``` in their root folders to recompile each.  
 
 If you are on a laptop, you can uncomment dwmblock's battery line in its config.h (in ~/.local/src/dwmblocks/) to add a battery status indicator to your bar. You will need to recompile to apply this.
 ```

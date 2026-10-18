@@ -722,6 +722,10 @@ sed -i '/^# BEGIN pomni hosts$/,/^# END pomni hosts$/d' /etc/hosts
 	printf '\n# END pomni hosts\n'
 } >> /etc/hosts
 
+# Beep fix
+rmmod pcspkr
+echo "blacklist pcspkr" >/etc/modprobe.d/nobeep.conf
+
 # Finished
 whiptail \
 	--title "Finished" \

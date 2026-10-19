@@ -551,6 +551,10 @@ user_pref("svg.context-properties.content.enabled", true);
 user_pref("layout.css.has-selector.enabled", true);
 user_pref("extensions.autoDisableScopes", 0);
 user_pref("browser.uidensity", 1);
+user_pref("privacy.clearOnShutdown_v2.cookiesAndStorage", false);
+user_pref("privacy.clearOnShutdown.cookies", false);
+user_pref("privacy.clearOnShutdown.offlineApps", false);
+user_pref("privacy.clearOnShutdown.sessions", false);
 EOF
 
 # Betterfox-based prefs

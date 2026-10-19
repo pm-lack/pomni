@@ -377,14 +377,22 @@ sudo -u "$name" mkdir -p "$home/.local/src"
 for repo in dwm-6.8 dmenu st dwmblocks; do
 	dest="$home/.local/src/$repo"
 
-	# Clone as the user so everything stays user-owned
-	sudo -u "$name" env GIT_TERMINAL_PROMPT=0 \
-		git clone --depth 1 "https://github.com/pm-lack/$repo" "$dest" >/dev/null 2>&1 ||
-		die "Failed to clone $repo."
+# Clone as the user so everything stays user-owned
+sudo -u "$name" env GIT_TERMINAL_PROMPT=0 \
+	git clone --depth 1 "https://github.com/pm-lack/$repo" "$dest" >/dev/null 2>&1 ||
+	die "Failed to clone $repo."
 
-	# Build as the user; sudo only for the install step
-	sudo -u "$name" sudo make -C "$dest" clean install >/dev/null 2>&1 ||
-		die "Failed to build and install $repo."
+# Enable the battery block on laptops
+if [ "$repo" = "dwmblocks" ] && [ "$laptop" -eq 1 ]; then
+	sudo -u "$name" sed -i '/sb-battery/{s|/\* *||;s| *\*/||;}' "$dest/config.h" ||
+		die "Failed to edit the dwmblocks config."
+	grep -q '^[[:space:]]*{.*sb-battery' "$dest/config.h" ||
+		die "Failed to enable the battery block."
+fi
+
+# Build as the user; sudo only for the install step
+sudo -u "$name" sudo make -C "$dest" clean install >/dev/null 2>&1 ||
+	die "Failed to build and install $repo."
 done
 
 # Creating blocks

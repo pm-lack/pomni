@@ -55,12 +55,6 @@ Fonts are set in a few different places for a few different applications.
 	    "Misc Tamzen:size=10"
   ```
 
-If you are on a laptop, you can uncomment dwmblock's battery line in its config.h (in ~/.local/src/dwmblocks/) to add a battery status indicator to your bar. You will need to recompile to apply this.
-```
-/* {" ",	"sb-battery",	5,	3}, */
-```
-
-
 ## Keybinds
 Common
 - Mod+Enter,                Spawn terminal

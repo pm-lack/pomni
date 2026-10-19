@@ -467,6 +467,19 @@ fi
 # Make blocks runable
 chmod +x "$home"/.local/bin/statusbar/sb-*
 
+# TLP (laptops only)
+if [ "$laptop" -eq 1 ]; then
+whiptail \
+--title "Installing" \
+--infobox \
+	"Setting up laptop power management..." \
+	8 50
+pacman -S --needed --noconfirm tlp-runit >/dev/null 2>&1 ||
+	die "Failed to install TLP."
+ln -sf /etc/runit/sv/tlp /etc/runit/runsvdir/default/ ||
+	die "Failed to enable TLP."
+fi
+
 # Install librewolf
 whiptail \
 	--title "Installing" \

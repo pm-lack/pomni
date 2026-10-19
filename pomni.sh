@@ -294,7 +294,7 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
-pacman -S --needed --noconfirm libxinerama xorg-xrandr xwallpaper libxft xorg-xinit libx11 freetype2 fontconfig harfbuzz xcompmgr openssh >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm libxinerama xorg-xbacklight xorg-xrandr xwallpaper libxft xorg-xinit libx11 freetype2 fontconfig harfbuzz xcompmgr openssh >/dev/null 2>&1 ||
 	die "Failed to install X dependencies."
 sudo -u "$name" mkdir -p "$home/.config/x11"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
@@ -647,7 +647,7 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim unclutter xclip thunar tumbler fastfetch >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler fastfetch >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 
 # Wallpaper

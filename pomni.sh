@@ -654,23 +654,35 @@ pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotif
 sudo -u "$name" mkdir -p "$home/.config/dunst"
 sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
 [global]
-    background = "#222222"
-    foreground = "#cdd6f4"
-    frame_color = "#89b4fa"
-    separator_color = frame
-    highlight = "#89b4fa"
+    monitor = 0
+    follow = keyboard
+    width = 370
+    height = 350
+    offset = 0x19
+    padding = 2
+    horizontal_padding = 2
+    frame_width = 1
+    transparency = 25
+    font = "Tamzen Misc" 12
+    format = "<b>%s</b>\n%b"
+# Matches dwm SchemeNorm: fg gray3, bg gray1, border gray2
 [urgency_low]
-    background = "#222222"
-    foreground = "#cdd6f4"
-    frame_color = "#585b70"
+    background = "#424242"
+    foreground = "#e4e4e4"
+    frame_color = "#575757"
+    timeout = 3
+# Matches dwm SchemeSel: fg gray3, bg gray2, border gray3
 [urgency_normal]
-    background = "#222222"
-    foreground = "#cdd6f4"
-    frame_color = "#89b4fa"
+    background = "#575757"
+    foreground = "#e4e4e4"
+    frame_color = "#e4e4e4"
+    timeout = 5
+# Magenta for urgent; dark text for contrast
 [urgency_critical]
-    background = "#222222"
-    foreground = "#cdd6f4"
-    frame_color = "#f38ba8"
+    background = "#f5c2e7"
+    foreground = "#424242"
+    frame_color = "#e4e4e4"
+    timeout = 10
 EOF
 
 # Wallpaper

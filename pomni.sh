@@ -616,13 +616,6 @@ curl -fsSL \
 
 echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
 
-# Start and kill Librewolf again
-sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
-	librewolf --headless >/dev/null 2>&1 &
-sleep 2
-pkill -u "$name" -f librewolf
-sleep 1
-
 # Install utilities
 whiptail \
 	--title "Installing" \

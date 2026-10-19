@@ -616,7 +616,7 @@ curl -fsSL \
 
 echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
 
-# TEST TEST TEST
+# Fix for extensions not loading on first launch
 sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
 	librewolf --headless >/dev/null 2>&1 &
 i=0
@@ -631,7 +631,6 @@ done
 sleep 3
 pkill -u "$name" -f librewolf
 sleep 1
-# End of TEST TEST TEST
 
 # Install utilities
 whiptail \

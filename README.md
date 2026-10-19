@@ -30,30 +30,6 @@ xrandr \
   --output HDMI-0 --mode 2560x1440 --rate 240 --primary --pos 0x0 \
   --output DP-0 --mode 2560x1440 --rate 165 --pos 2560x0
 ```
-Additionally, the default font size is tailored for 1280x800. Given this, you may want to increase the font size depending on your display. Here are some recommendations;  
-- 13-14 for 1080p
-- 17-18 for 1440p
-- 26-27 for 2160p
-
-Fonts are set in a few different places for a few different applications.  
-- GTK fonts are set in ~/.config/gtk-3.0/settings.ini
-  ```
-  gtk-font-name=Tamzen 11
-  ```
-- Suckless software will need to be recompiled to be changed. They can be found in ~/.local/src. Run ```sudo make clean install``` in their root folders to recompile each after changing their config.h files.
-  ```
-  dwm:
-  static const char *fonts[]          = { "Misc Tamzen:size=10" };
-  static const char dmenufont[]       = "Misc Tamzen:size=10";
-
-  dmenu:
-  static char font[] = "Misc Tamzen:size=10";
-
-  st:
-  static char *font = "Misc Tamzen:size=10";
-  static char *font2[] = {
-	    "Misc Tamzen:size=10"
-  ```
 
 ## Keybinds
 Common

@@ -280,9 +280,9 @@ if command -v whiptail >/dev/null 2>&1; then
 			"Detected vertical resolution: ${vertical}px\n\nIs this correct?" \
 			11 60
 		case $? in
-			0) ;;                                              # Yes: keep detected value
-			1) resolution=$(pick_resolution "$resolution") ;;  # No: show full menu
-			*) resolution=1 ;;                                 # Esc or error
+			0) ;;
+			1) resolution=$(pick_resolution "$resolution") ;;
+			*) resolution=1 ;;
 		esac
 	fi
 fi

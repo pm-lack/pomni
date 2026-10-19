@@ -516,6 +516,11 @@ while [ "$i" -lt 30 ] && [ ! -f "$lwdir/profiles.ini" ]; do
 	sleep 1
 done
 
+# Give it a moment to finish writing, then stop the throwaway instance
+sleep 2
+pkill -u "$name" -f librewolf
+sleep 1
+
 [ -f "$lwdir/profiles.ini" ] ||
 	die "LibreWolf did not generate a profile."
 
@@ -554,12 +559,7 @@ dollchan_extension dollchan_extension@dollchan.net
 EOF
 chown -R "$name": "$pdir/extensions"
 
-# Give it a moment to finish writing, then stop the throwaway instance
-sleep 2
-pkill -u "$name" -f librewolf
-sleep 1
-
-# Prefs the theme needs
+# Librewolf prefs
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("svg.context-properties.content.enabled", true);
@@ -615,6 +615,13 @@ curl -fsSL \
 	sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir"
 
 echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
+
+# Start and kill Librewolf again
+sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+	librewolf --headless >/dev/null 2>&1 &
+sleep 2
+pkill -u "$name" -f librewolf
+sleep 1
 
 # Install utilities
 whiptail \

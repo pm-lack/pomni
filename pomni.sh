@@ -223,6 +223,49 @@ if [ "$has_battery" -eq 1 ]; then
 	fi
 fi
 
+# Resolution detection
+detect_vertical() {
+    local c mode v
+    for c in /sys/class/drm/card*-*; do
+        [ -r "$c/status" ] || continue
+        [ "$(cat "$c/status")" = connected ] || continue
+        mode=$(head -n1 "$c/modes" 2>/dev/null)
+        v=${mode#*x}
+        v=${v%%[!0-9]*}
+        [ -n "$v" ] || continue
+        echo "$v"
+        return 0
+    done
+    return 1
+}
+bucket() {
+    if   [ "$1" -le 800 ];  then echo 1
+    elif [ "$1" -le 1200 ]; then echo 2
+    elif [ "$1" -le 1440 ]; then echo 3
+    else                         echo 4
+    fi
+}
+vertical=$(detect_vertical) || vertical=""
+case $vertical in
+    ''|*[!0-9]*) resolution=1 ;;
+    *)           resolution=$(bucket "$vertical") ;;
+esac
+if command -v whiptail >/dev/null 2>&1; then
+    choice=$(whiptail --title "Display scaling" \
+        --default-item "$resolution" \
+        --menu "Detected vertical resolution: ${vertical:-unknown}px\nConfirm or change:" 16 60 4 \
+        1 "800px or less" \
+        2 "801px - 1200px" \
+        3 "1201px - 1440px" \
+        4 "More than 1440px" \
+        3>&1 1>&2 2>&3) || choice=""
+    case $choice in
+        1|2|3|4) resolution=$choice ;;
+        *)       resolution=1 ;;
+    esac
+fi
+echo "resolution=$resolution"
+
 # Lib32
 whiptail \
 	--title "Adding repo" \

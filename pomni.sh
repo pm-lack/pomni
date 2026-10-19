@@ -570,6 +570,24 @@ user_pref("privacy.clearOnShutdown_v2.cookiesAndStorage", false);
 user_pref("privacy.clearOnShutdown.cookies", false);
 user_pref("privacy.clearOnShutdown.offlineApps", false);
 user_pref("privacy.clearOnShutdown.sessions", false);
+user_pref("general.smoothScroll.general.smoothScroll.currentVelocityWeighting", 0.15);
+user_pref("general.smoothScroll.msdPhysics.continuousMotionMaxDeltaMS", 250);
+user_pref("general.smoothScroll.msdPhysics.motionBeginSpringConstant", 400);
+user_pref("general.smoothScroll.msdPhysics.regularSpringConstant", 400);
+user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaMS", 180);
+user_pref("general.smoothScroll.msdPhysics.slowdownMinDeltaRatio", 0.4);
+user_pref("general.smoothScroll.msdPhysics.slowdownSpringConstant", 5000);
+user_pref("general.smoothScroll.lines.durationMaxMS", 200);
+user_pref("general.smoothScroll.lines.durationMinMS", 450);
+user_pref("general.smoothScroll.mouseWheel.durationMaxMS", 300);
+user_pref("general.smoothScroll.mouseWheel.durationMinMS", 250);
+user_pref("general.smoothScroll.other.durationMaxMS", 400);
+user_pref("general.smoothScroll.other.durationMinMS", 400);
+user_pref("general.smoothScroll.pages.durationMaxMS", 300);
+user_pref("general.smoothScroll.pages.durationMinMS", 300);
+user_pref("general.smoothScroll.scrollbars.durationMaxMS", 200);
+user_pref("general.smoothScroll.scrollbars.durationMinMS", 450);
+user_pref("smoothScroll.currentVelocityWeighting", 0.05);
 EOF
 
 # Betterfox-based prefs

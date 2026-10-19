@@ -373,6 +373,12 @@ xset r rate 400 32
 
 # Activate dbus variables
 dbus-update-activation-environment --all
+
+# Disable unused accessibility services
+pkill -f '^/usr/lib/at-spi2-registryd'
+pkill -f '^/usr/lib/at-spi-bus-launcher'
+
+# Launch DWM
 dbus-launch ssh-agent dwm
 EOF
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'

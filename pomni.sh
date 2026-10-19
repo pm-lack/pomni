@@ -516,11 +516,6 @@ while [ "$i" -lt 30 ] && [ ! -f "$lwdir/profiles.ini" ]; do
 	sleep 1
 done
 
-# Give it a moment to finish writing, then stop the throwaway instance
-sleep 2
-pkill -u "$name" -f librewolf
-sleep 1
-
 [ -f "$lwdir/profiles.ini" ] ||
 	die "LibreWolf did not generate a profile."
 
@@ -558,6 +553,11 @@ darkreader addon@darkreader.org
 dollchan_extension dollchan_extension@dollchan.net
 EOF
 chown -R "$name": "$pdir/extensions"
+
+# Give it a moment to finish writing, then stop the throwaway instance
+sleep 2
+pkill -u "$name" -f librewolf
+sleep 1
 
 # Prefs the theme needs
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'

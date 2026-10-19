@@ -245,24 +245,46 @@ bucket() {
     else                         echo 4
     fi
 }
+bucket_label() {
+    case $1 in
+        1) echo "800px or less" ;;
+        2) echo "801px - 1200px" ;;
+        3) echo "1201px - 1440px" ;;
+        4) echo "More than 1440px" ;;
+    esac
+}
+pick_resolution() {
+    local choice
+    choice=$(whiptail --title "Display scaling" \
+        --default-item "$1" \
+        --menu "Select the option matching your display:" 16 60 4 \
+        1 "$(bucket_label 1)" \
+        2 "$(bucket_label 2)" \
+        3 "$(bucket_label 3)" \
+        4 "$(bucket_label 4)" \
+        3>&1 1>&2 2>&3) || choice=""
+    case $choice in
+        1|2|3|4) echo "$choice" ;;
+        *)       echo 1 ;;
+    esac
+}
 vertical=$(detect_vertical) || vertical=""
 case $vertical in
-    ''|*[!0-9]*) resolution=1 ;;
+    ''|*[!0-9]*) vertical=""; resolution=1 ;;
     *)           resolution=$(bucket "$vertical") ;;
 esac
 if command -v whiptail >/dev/null 2>&1; then
-    choice=$(whiptail --title "Display scaling" \
-        --default-item "$resolution" \
-        --menu "Detected vertical resolution: ${vertical:-unknown}px\nConfirm or change:" 16 60 4 \
-        1 "800px or less" \
-        2 "801px - 1200px" \
-        3 "1201px - 1440px" \
-        4 "More than 1440px" \
-        3>&1 1>&2 2>&3) || choice=""
-    case $choice in
-        1|2|3|4) resolution=$choice ;;
-        *)       resolution=1 ;;
-    esac
+    if [ -z "$vertical" ]; then
+        resolution=$(pick_resolution 1)
+    else
+        whiptail --title "Display scaling" --yesno \
+            "Detected vertical resolution: ${vertical}px\nThis falls in: $(bucket_label "$resolution")\n\nIs this correct?" 11 60
+        case $? in
+            0) ;;
+            1) resolution=$(pick_resolution "$resolution") ;;
+            *) resolution=1 ;;
+        esac
+    fi
 fi
 echo "resolution=$resolution"
 

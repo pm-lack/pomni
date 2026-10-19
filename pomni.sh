@@ -662,26 +662,19 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
     padding = 2
     horizontal_padding = 2
     frame_width = 1
-    transparency = 25
+    frame_color = "#575757"
+    transparency = 10
     font = "Tamzen Misc" 12
     format = "<b>%s</b>\n%b"
-# Matches dwm SchemeNorm: fg gray3, bg gray1, border gray2
+    background = "#222222"
+    foreground = "#cdd6f4"
 [urgency_low]
-    background = "#424242"
-    foreground = "#e4e4e4"
-    frame_color = "#575757"
+    foreground = "#bbbbbb"
     timeout = 3
-# Matches dwm SchemeSel: fg gray3, bg gray2, border gray3
 [urgency_normal]
-    background = "#575757"
-    foreground = "#e4e4e4"
-    frame_color = "#e4e4e4"
     timeout = 5
-# Magenta for urgent; dark text for contrast
 [urgency_critical]
-    background = "#f5c2e7"
-    foreground = "#424242"
-    frame_color = "#e4e4e4"
+    frame_color = "#f5c2e7"
     timeout = 10
 EOF
 

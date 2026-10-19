@@ -806,6 +806,7 @@ sed -i '/^# BEGIN pomni hosts$/,/^# END pomni hosts$/d' /etc/hosts
 	cat "$TMPDIR/hosts"
 	printf '\n# END pomni hosts\n'
 } >> /etc/hosts
+sleep 1
 
 # Beep fix
 rmmod pcspkr

@@ -225,66 +225,66 @@ fi
 
 # Resolution detection
 detect_vertical() {
-    local c mode v
-    for c in /sys/class/drm/card*-*; do
-        [ -r "$c/status" ] || continue
-        [ "$(cat "$c/status")" = connected ] || continue
-        mode=$(head -n1 "$c/modes" 2>/dev/null)
-        v=${mode#*x}
-        v=${v%%[!0-9]*}
-        [ -n "$v" ] || continue
-        echo "$v"
-        return 0
-    done
-    return 1
+	local c mode v
+	for c in /sys/class/drm/card*-*; do
+		[ -r "$c/status" ] || continue
+		[ "$(cat "$c/status")" = connected ] || continue
+		mode=$(head -n1 "$c/modes" 2>/dev/null)
+		v=${mode#*x}
+		v=${v%%[!0-9]*}
+		[ -n "$v" ] || continue
+		echo "$v"
+		return 0
+	done
+	return 1
 }
 bucket() {
-    if   [ "$1" -le 800 ];  then echo 1
-    elif [ "$1" -le 1200 ]; then echo 2
-    elif [ "$1" -le 1440 ]; then echo 3
-    else                         echo 4
-    fi
-}
-bucket_label() {
-    case $1 in
-        1) echo "800px or less" ;;
-        2) echo "801px - 1200px" ;;
-        3) echo "1201px - 1440px" ;;
-        4) echo "More than 1440px" ;;
-    esac
+	if   [ "$1" -le 800 ];  then echo 1
+	elif [ "$1" -le 1200 ]; then echo 2
+	elif [ "$1" -le 1440 ]; then echo 3
+	else                         echo 4
+	fi
 }
 pick_resolution() {
-    local choice
-    choice=$(whiptail --title "Display scaling" \
-        --default-item "$1" \
-        --menu "Select the option matching your display:" 16 60 4 \
-        1 "$(bucket_label 1)" \
-        2 "$(bucket_label 2)" \
-        3 "$(bucket_label 3)" \
-        4 "$(bucket_label 4)" \
-        3>&1 1>&2 2>&3) || choice=""
-    case $choice in
-        1|2|3|4) echo "$choice" ;;
-        *)       echo 1 ;;
-    esac
+	local choice
+	choice=$(whiptail \
+		--title "Display scaling" \
+		--fullbuttons \
+		--default-item "$1" \
+		--menu \
+		"Select the option matching your display:" \
+		16 60 4 \
+		1 "800px or less" \
+		2 "801px - 1200px" \
+		3 "1201px - 1440px" \
+		4 "More than 1440px" \
+		3>&1 1>&2 2>&3) || choice=""
+	case $choice in
+		1|2|3|4) echo "$choice" ;;
+		*)       echo 1 ;;
+	esac
 }
 vertical=$(detect_vertical) || vertical=""
 case $vertical in
-    ''|*[!0-9]*) vertical=""; resolution=1 ;;
-    *)           resolution=$(bucket "$vertical") ;;
+	''|*[!0-9]*) vertical=""; resolution=1 ;;
+	*)           resolution=$(bucket "$vertical") ;;
 esac
 if command -v whiptail >/dev/null 2>&1; then
-    if [ -z "$vertical" ]; then
-        resolution=$(pick_resolution 1)
-    else
-        whiptail --title "Display scaling" --yesno \
-            "Detected vertical resolution: ${vertical}px\nThis falls in: $(bucket_label "$resolution")\n\nIs this correct?" 11 60
-        case $? in
-            0) ;;
-            1) resolution=$(pick_resolution "$resolution") ;;
-            *) resolution=1 ;;
-        esac
-    fi
+	if [ -z "$vertical" ]; then
+		resolution=$(pick_resolution 1)
+	else
+		whiptail \
+			--title "Resolution detected" \
+			--fullbuttons \
+			--yesno \
+			"Detected vertical resolution: ${vertical}px\n\nIs this correct?" \
+			10 60
+		case $? in
+			0) ;;                                              # Yes: keep detected value
+			1) resolution=$(pick_resolution "$resolution") ;;  # No: show full menu
+			*) resolution=1 ;;                                 # Esc or error
+		esac
+	fi
 fi
 echo "resolution=$resolution"
 

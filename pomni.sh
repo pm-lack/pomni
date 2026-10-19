@@ -455,6 +455,26 @@ if [ "$repo" = "dwmblocks" ] && [ "$laptop" -eq 1 ]; then
 		die "Failed to enable the battery block."
 fi
 
+# Scale the fonts
+if [ "$resolution" -gt 1 ]; then
+	case $resolution in
+		2) fontsize=13 ;;
+		3) fontsize=18 ;;
+		4) fontsize=27 ;;
+	esac
+	case $repo in
+		dwm)       cfg="$dest/config.def.h" ;;
+		st|dmenu)  cfg="$dest/config.h" ;;
+		*)         cfg="" ;;
+	esac
+	if [ -n "$cfg" ]; then
+		sudo -u "$name" sed -i "s|\(Misc Tamzen:size=\)[0-9][0-9]*|\1${fontsize}|g" "$cfg" ||
+			die "Failed to edit the $repo font size."
+		grep -q "Misc Tamzen:size=${fontsize}" "$cfg" ||
+			die "Failed to set the $repo font size."
+	fi
+fi
+
 # Build as the user; sudo only for the install step
 sudo -u "$name" sudo make -C "$dest" clean install >/dev/null 2>&1 ||
 	die "Failed to build and install $repo."

@@ -206,6 +206,23 @@ export MOZ_USE_XINPUT2=1                  # Mozilla smooth scrolling/touchpads.
 [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
 EOF
 
+# Laptop detection
+laptop=0
+has_battery=0
+for bat in /sys/class/power_supply/BAT*; do
+	[ -e "$bat" ] && has_battery=1 && break
+done
+if [ "$has_battery" -eq 1 ]; then
+	if whiptail \
+		--title "Battery detected" \
+		--fullbuttons \
+		--yesno \
+		"This script has detected a battery.\n\nAre you on a laptop?" \
+		10 60; then
+		laptop=1
+	fi
+fi
+
 # Lib32
 whiptail \
 	--title "Adding repo" \

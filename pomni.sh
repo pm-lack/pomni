@@ -480,6 +480,21 @@ ln -sf /etc/runit/sv/tlp /etc/runit/runsvdir/default/ ||
 	die "Failed to enable TLP."
 fi
 
+# Enable tap to click (laptops only)
+if [ "$laptop" -eq 1 ] && [ ! -f /etc/X11/xorg.conf.d/40-libinput.conf ]; then
+mkdir -p /etc/X11/xorg.conf.d
+cat > /etc/X11/xorg.conf.d/40-libinput.conf <<'EOF'
+Section "InputClass"
+	Identifier "libinput touchpad catchall"
+	MatchIsTouchpad "on"
+	MatchDevicePath "/dev/input/event*"
+	Driver "libinput"
+	# Enable left mouse button by tapping
+	Option "Tapping" "on"
+EndSection
+EOF
+fi
+
 # Install librewolf
 whiptail \
 	--title "Installing" \

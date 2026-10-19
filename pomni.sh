@@ -452,6 +452,8 @@ status="$wifi"
 [ -n "$ethernet" ] && status="${status:+$status }$ethernet"
 printf '%s\n' "${status:-off}"
 EOF
+# Laptop only script
+if [ "$laptop" -eq 1 ]; then
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'
 BAT_PATH="/sys/class/power_supply/BAT0"
 if [ -f "$BAT_PATH/capacity" ]; then
@@ -461,7 +463,7 @@ else
     echo "[bat:N/A]"
 fi
 EOF
-
+fi
 # Make blocks runable
 chmod +x "$home"/.local/bin/statusbar/sb-*
 

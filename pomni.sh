@@ -617,20 +617,20 @@ curl -fsSL \
 echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
 
 # Fix for extensions not loading on first launch
-#sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
-#	librewolf --headless >/dev/null 2>&1 &
-#i=0
-#while [ "$i" -lt 30 ]; do
-#	if grep -q 'addon@darkreader.org' "$pdir/extensions.json" 2>/dev/null &&
-#	   grep -q 'dollchan_extension@dollchan.net' "$pdir/extensions.json" 2>/dev/null; then
-#		break
-#	fi
-#	i=$((i + 1))
-#	sleep 1
-#done
-#sleep 3
-#pkill -u "$name" -f librewolf
-#sleep 1
+sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+	librewolf --headless >/dev/null 2>&1 &
+i=0
+while [ "$i" -lt 30 ]; do
+	if grep -q 'addon@darkreader.org' "$pdir/extensions.json" 2>/dev/null &&
+	   grep -q 'dollchan_extension@dollchan.net' "$pdir/extensions.json" 2>/dev/null; then
+		break
+	fi
+	i=$((i + 1))
+	sleep 1
+done
+sleep 3
+pkill -u "$name" -f librewolf
+sleep 1
 
 # Install utilities
 whiptail \

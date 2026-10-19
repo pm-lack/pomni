@@ -570,6 +570,7 @@ chown -R "$name": "$pdir/extensions"
 # Librewolf prefs
 sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("browser.toolbars.bookmarks.visibility", "never");
+user_pref("browser.download.autohideButton", true);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("svg.context-properties.content.enabled", true);
 user_pref("layout.css.has-selector.enabled", true);

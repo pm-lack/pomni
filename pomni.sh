@@ -463,7 +463,7 @@ if [ "$resolution" -gt 1 ]; then
 		4) fontsize=27 ;;
 	esac
 	case $repo in
-		dwm)       cfg="$dest/config.def.h" ;;
+		dwm*)      cfg="$dest/config.def.h" ;;
 		st|dmenu)  cfg="$dest/config.h" ;;
 		*)         cfg="" ;;
 	esac

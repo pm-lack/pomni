@@ -650,6 +650,29 @@ whiptail \
 pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler fastfetch >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 
+# Dunst
+sudo -u "$name" mkdir -p "$home/.config/dunst"
+sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
+[global]
+    background = "#222222"
+    foreground = "#cdd6f4"
+    frame_color = "#89b4fa"
+    separator_color = frame
+    highlight = "#89b4fa"
+[urgency_low]
+    background = "#222222"
+    foreground = "#cdd6f4"
+    frame_color = "#585b70"
+[urgency_normal]
+    background = "#222222"
+    foreground = "#cdd6f4"
+    frame_color = "#89b4fa"
+[urgency_critical]
+    background = "#222222"
+    foreground = "#cdd6f4"
+    frame_color = "#f38ba8"
+EOF
+
 # Wallpaper
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'
 #!/bin/sh

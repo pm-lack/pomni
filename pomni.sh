@@ -657,13 +657,12 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
     monitor = 0
     follow = keyboard
     width = 370
-    height = 350
     offset = 0x19
     padding = 2
     horizontal_padding = 2
-    frame_width = 1
-    frame_color = "#575757"
-    transparency = 10
+    frame_width = 3
+    frame_color = "#e4e4e4"
+    transparency = 25
     font = "Tamzen Misc" 12
     format = "<b>%s</b>\n%b"
     background = "#222222"

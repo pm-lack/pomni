@@ -614,6 +614,12 @@ user_pref("toolkit.scrollbox.smoothScroll", true);
 user_pref("zen.startup.smooth-scroll-in-tabs", true);
 EOF
 
+# Homepage
+sudo -u "$name" sh -c 'cat >> "$1/prefs.js"' sh "$pdir" <<'EOF'
+user_pref("browser.startup.homepage", "https://lackthereof.xyz/");
+user_pref("browser.startup.page", 1);
+EOF
+
 # Betterfox-based prefs
 curl -fsSL \
 	-o "$TMPDIR/betterfox-user.js" \

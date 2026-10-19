@@ -745,6 +745,12 @@ pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotif
 
 # Dunst
 sudo -u "$name" mkdir -p "$home/.config/dunst"
+case $resolution in
+	2) dunstfont=13 ;;
+	3) dunstfont=14 ;;
+	4) dunstfont=15 ;;
+	*) dunstfont=12 ;;
+esac
 sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
 [global]
     monitor = 0
@@ -756,7 +762,7 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
     frame_width = 3
     frame_color = "#e4e4e4"
     transparency = 25
-    font = "Tamzen Misc" 12
+    font = "Tamzen Misc" ${dunstfont}
     format = "<b>%s</b>\n%b"
     background = "#222222"
     foreground = "#cdd6f4"
@@ -904,11 +910,17 @@ EOF
 
 # GTK
 sudo -u "$name" mkdir -p "$home/.config/gtk-3.0"
-sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/settings.ini"' <<'EOF'
+case $resolution in
+	2) gtkfont=12 ;;
+	3) gtkfont=13 ;;
+	4) gtkfont=14 ;;
+	*) gtkfont=11 ;;
+esac
+sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/settings.ini"' <<EOF
 [Settings]
 gtk-theme-name=adw-gtk3-dark
 gtk-icon-theme-name=Adwaita
-gtk-font-name=Tamzen 11
+gtk-font-name=Tamzen ${gtkfont}
 gtk-cursor-theme-size=0
 gtk-toolbar-style=GTK_TOOLBAR_TEXT
 gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR

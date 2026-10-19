@@ -278,7 +278,7 @@ if command -v whiptail >/dev/null 2>&1; then
 			--fullbuttons \
 			--yesno \
 			"Detected vertical resolution: ${vertical}px\n\nIs this correct?" \
-			10 60
+			11 60
 		case $? in
 			0) ;;                                              # Yes: keep detected value
 			1) resolution=$(pick_resolution "$resolution") ;;  # No: show full menu

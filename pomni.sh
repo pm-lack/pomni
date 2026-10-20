@@ -294,15 +294,15 @@ if whiptail \
 	--title "Extras" \
 	--fullbuttons \
 	--yesno \
-	"Would you like to install extras?\n\n(Vesktop and qBittorrent)" \
+	"Would you like to install extras?\n\n(qBittorrent, Vesktop, BTOP)" \
 	11 60; then
 	whiptail \
 		--title "Installing" \
 		--infobox \
 		"Setting up extras..." \
 		8 50
-pacman -S --needed --noconfirm qbittorrent fuse2 >/dev/null 2>&1 ||
-	die "Failed to install qBittorrent."
+pacman -S --needed --noconfirm qbittorrent fuse2 btop >/dev/null 2>&1 ||
+	die "Failed to install qBittorrent and/or btop."
 sudo -u "$name" mkdir -p "$home/.config/qBittorrent"
 sudo -u "$name" curl -fsSL \
 	-o "$home/.config/qBittorrent/mocha.qbtheme" \

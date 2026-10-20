@@ -675,6 +675,7 @@ user_pref("privacy.clearOnShutdown_v2.cookiesAndStorage", false);
 user_pref("privacy.clearOnShutdown.cookies", false);
 user_pref("privacy.clearOnShutdown.offlineApps", false);
 user_pref("privacy.clearOnShutdown.sessions", false);
+user_pref("accessibility.force_disabled", 1);
 user_pref("general.smoothScroll", true);
 user_pref("general.smoothScroll.currentVelocityWeighting", 0.15);
 user_pref("general.smoothScroll.durationToIntervalRatio", 200);

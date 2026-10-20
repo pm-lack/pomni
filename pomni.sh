@@ -301,19 +301,78 @@ if whiptail \
 		--infobox \
 		"Setting up extras..." \
 		8 50
-	pacman -S --needed --noconfirm qbittorrent fuse2 >/dev/null 2>&1 ||
-		die "Failed to install qBittorrent."
-	sudo -u "$name" mkdir -p "$home/.config/qBittorrent"
-	sudo -u "$name" curl -fsSL \
-		-o "$home/.config/qBittorrent/mocha.qbtheme" \
-		"https://github.com/catppuccin/qbittorrent/releases/download/v2.0.1/catppuccin-mocha.qbtheme" ||
-		die "Failed to download qBittorrent theme."
-	sudo -u "$name" curl -fsSL \
-		-o "$home/.local/bin/vesktop" \
-		"https://vencord.dev/download/vesktop/amd64/appimage" ||
-		die "Failed to download Vesktop."
-	chmod +x "$home/.local/bin/vesktop"
-	vesktop=1
+pacman -S --needed --noconfirm qbittorrent fuse2 >/dev/null 2>&1 ||
+	die "Failed to install qBittorrent."
+sudo -u "$name" mkdir -p "$home/.config/qBittorrent"
+sudo -u "$name" curl -fsSL \
+	-o "$home/.config/qBittorrent/mocha.qbtheme" \
+	"https://github.com/catppuccin/qbittorrent/releases/download/v2.0.1/catppuccin-mocha.qbtheme" ||
+	die "Failed to download qBittorrent theme."
+sudo -u "$name" sh -c 'cat > "$HOME/.config/qBittorrent/qBittorrent.conf"' <<'EOF'
+[Application]
+FileLogger\Age=1
+FileLogger\AgeType=1
+FileLogger\Backup=true
+FileLogger\DeleteOld=true
+FileLogger\Enabled=true
+FileLogger\MaxSizeBytes=66560
+FileLogger\Path=/home/pm/.local/share/qBittorrent/logs
+GUI\Notifications\TorrentAdded=false
+
+[BitTorrent]
+Session\Port=20157
+Session\QueueingSystemEnabled=false
+Session\SSL\Port=21198
+Session\StartPaused=false
+
+[Core]
+AutoDeleteAddedTorrentFile=Never
+
+[GUI]
+DownloadTrackerFavicon=false
+Log\Enabled=false
+Qt6\TorrentProperties\FilesListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x2X\0\0\0\x6\x1\x1\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\x6\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
+Qt6\TorrentProperties\PeerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\xf@@\0\0\0\x2\0\0\0\xe\0\0\0\x64\0\0\0\x6\0\0\0\x64\0\0\x5\x14\0\0\0\xf\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\xf\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
+Qt6\TorrentProperties\TrackerListState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x4L\0\0\0\v\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0\v\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\xff\xff\xff\xff\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
+Qt6\TransferList\HeaderState=@ByteArray(\0\0\0\xff\0\0\0\0\0\0\0\x1\0\0\0\x1\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0&\t\xfa\xff\x7f?\0\0\0\x1d\0\0\0\x1d\0\0\0\x64\0\0\0\x18\0\0\0\x64\0\0\0\x14\0\0\0\x64\0\0\0\x3\0\0\0\x64\0\0\0\"\0\0\0\x64\0\0\0#\0\0\0\x64\0\0\0!\0\0\0\x64\0\0\0\x17\0\0\0\x64\0\0\0\x19\0\0\0\x64\0\0\0\xe\0\0\0\x64\0\0\0 \0\0\0\x64\0\0\0\x1a\0\0\0\x64\0\0\0\x1b\0\0\0\x64\0\0\0\x15\0\0\0\x64\0\0\0\x12\0\0\0\x64\0\0\0\x10\0\0\0\x64\0\0\0%\0\0\0\x64\0\0\0\x16\0\0\0\x64\0\0\0\0\0\0\0\x64\0\0\0\v\0\0\0\x64\0\0\0\xf\0\0\0\x64\0\0\0$\0\0\0\x64\0\0\0\t\0\0\0\x64\0\0\0\x1c\0\0\0\x64\0\0\0\x1e\0\0\0\x64\0\0\0\x11\0\0\0\x64\0\0\0\r\0\0\0\x64\0\0\0\x13\0\0\0\x64\0\0\0\f\0\0\0\x64\0\0\x3\x84\0\0\0&\x1\x1\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x64\xff\xff\xff\xff\0\0\0\x81\0\0\0\0\0\0\0&\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\x64\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\0\0\0\0\0\x1\0\0\0\0\0\0\x3\xe8\0\0\0\0\x64\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x1)
+StartUpWindowState=Normal
+
+[LegalNotice]
+Accepted=true
+
+[MainWindow]
+geometry=@ByteArray(\x1\xd9\xd0\xcb\0\x3\0\0\xff\xff\xff\xfd\0\0\0\f\0\0\x4\xfc\0\0\x3\x1c\0\0\0\0\0\0\0\xf\0\0\x4\xf9\0\0\x3\x19\0\0\0\0\0\0\0\0\x5\0\0\0\0\0\0\0\0\xf\0\0\x4\xf9\0\0\x3\x19)
+
+[Meta]
+MigrationVersion=8
+
+[Network]
+Cookies=@Invalid()
+
+[OptionsDialog]
+HorizontalSplitterSizes=111, 642
+LastViewedPage=0
+Size=@Size(779 591)
+
+[Preferences]
+General\CustomUIThemePath=/home/pm/.config/qBittorrent/mocha.qbtheme
+General\Locale=en
+General\UseCustomUITheme=true
+
+[RSS]
+AutoDownloader\DownloadRepacks=true
+AutoDownloader\SmartEpisodeFilter=s(\\d+)e(\\d+), (\\d+)x(\\d+), "(\\d{4}[.\\-]\\d{1,2}[.\\-]\\d{1,2})", "(\\d{1,2}[.\\-]\\d{1,2}[.\\-]\\d{4})"
+
+[TorrentProperties]
+SplitterSizes="200,471"
+Visible=false
+EOF
+sudo -u "$name" curl -fsSL \
+	-o "$home/.local/bin/vesktop" \
+	"https://vencord.dev/download/vesktop/amd64/appimage" ||
+	die "Failed to download Vesktop."
+chmod +x "$home/.local/bin/vesktop"
+vesktop=1
 fi
 
 # Lib32

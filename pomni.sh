@@ -294,7 +294,7 @@ if whiptail \
 	--title "Extras" \
 	--fullbuttons \
 	--yesno \
-	"Would you like to install extras?\n\n(qBittorrent, Vesktop, BTOP)" \
+	"Would you like to install extras?\n\n(BTOP, musescore3, qBittorrent, Vesktop)" \
 	11 60; then
 	whiptail \
 		--title "Installing" \
@@ -302,7 +302,7 @@ if whiptail \
 		"Setting up extras..." \
 		8 50
 pacman -S --needed --noconfirm qbittorrent fuse2 btop >/dev/null 2>&1 ||
-	die "Failed to install qBittorrent and/or btop."
+	die "Failed to install btop and/or qBittorrent."
 sudo -u "$name" mkdir -p "$home/.config/qBittorrent"
 sudo -u "$name" curl -fsSL \
 	-o "$home/.config/qBittorrent/mocha.qbtheme" \
@@ -371,7 +371,11 @@ sudo -u "$name" curl -fsSL \
 	-o "$home/.local/bin/vesktop" \
 	"https://vencord.dev/download/vesktop/amd64/appimage" ||
 	die "Failed to download Vesktop."
-chmod +x "$home/.local/bin/vesktop"
+sudo -u "$name" curl -fsSL \
+	-o "$home/.local/bin/musescore" \
+	"https://github.com/musescore/MuseScore/releases/download/v3.6.2/MuseScore-3.6.2.548021370-x86_64.AppImage" ||
+	die "Failed to download musescore."
+chmod +x "$home/.local/bin/*"
 vesktop=1
 fi
 

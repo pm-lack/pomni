@@ -303,6 +303,11 @@ if whiptail \
 		8 50
 	pacman -S --needed --noconfirm qbittorrent fuse2 >/dev/null 2>&1 ||
 		die "Failed to install qBittorrent."
+	sudo -u "$name" mkdir -p "$home/.config/qBittorrent"
+	sudo -u "$name" curl -fsSL \
+		-o "$home/.config/qBittorrent/mocha.qbtheme" \
+		"https://github.com/catppuccin/qbittorrent/releases/download/v2.0.1/catppuccin-mocha.qbtheme" ||
+		die "Failed to download qBittorrent theme."
 	sudo -u "$name" curl -fsSL \
 		-o "$home/.local/bin/vesktop" \
 		"https://vencord.dev/download/vesktop/amd64/appimage" ||

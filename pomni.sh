@@ -371,11 +371,12 @@ sudo -u "$name" curl -fsSL \
 	-o "$home/.local/bin/vesktop" \
 	"https://vencord.dev/download/vesktop/amd64/appimage" ||
 	die "Failed to download Vesktop."
+chmod +x "$home/.local/bin/vesktop"
 sudo -u "$name" curl -fsSL \
 	-o "$home/.local/bin/musescore" \
 	"https://github.com/musescore/MuseScore/releases/download/v3.6.2/MuseScore-3.6.2.548021370-x86_64.AppImage" ||
 	die "Failed to download musescore."
-chmod +x "$home/.local/bin/*"
+chmod +x "$home/.local/bin/musescore"
 vesktop=1
 fi
 

@@ -218,7 +218,7 @@ if [ "$has_battery" -eq 1 ]; then
 		--fullbuttons \
 		--yesno \
 		"This script has detected a battery.\n\nAre you on a laptop?" \
-		10 60; then
+		11 60; then
 		laptop=1
 	fi
 fi

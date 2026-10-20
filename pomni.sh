@@ -288,6 +288,29 @@ if command -v whiptail >/dev/null 2>&1; then
 fi
 echo "resolution=$resolution"
 
+# Extras
+vesktop=0
+if whiptail \
+	--title "Extras" \
+	--fullbuttons \
+	--yesno \
+	"Would you like to install extras?\n\nVesktop and qBittorrent?" \
+	11 60; then
+	whiptail \
+		--title "Installing" \
+		--infobox \
+		"Setting up extras..." \
+		8 50
+	pacman -S --needed --noconfirm qbittorrent fuse2 >/dev/null 2>&1 ||
+		die "Failed to install qBittorrent."
+	sudo -u "$name" curl -fsSL \
+		-o "$home/.local/bin/vesktop" \
+		"https://vencord.dev/download/vesktop/amd64/appimage" ||
+		die "Failed to download Vesktop."
+	chmod +x "$home/.local/bin/vesktop"
+	vesktop=1
+fi
+
 # Lib32
 whiptail \
 	--title "Adding repo" \
@@ -487,6 +510,19 @@ if [ "$resolution" -gt 1 ]; then
 		grep -q "Misc Tamzen:size=${fontsize}" "$cfg" ||
 			die "Failed to set the $repo font size."
 	fi
+fi
+
+# Add Discord keybind
+if [ "$repo" = "dwm-6.8" ] && [ "$vesktop" -eq 1 ]; then
+	sudo -u "$name" sed -i \
+		-e '/^#define THUNAR /s~$~\n#define DISCORD "vesktop"~' \
+		-e '/XK_t,.*THUNAR/s~$~\n\t{ MODKEY|ShiftMask,\t\tXK_v,          spawn,                  {.v = (const char*[]){ DISCORD, NULL } } },~' \
+		"$dest/config.def.h" ||
+		die "Failed to edit the dwm config."
+	grep -q '^#define DISCORD "vesktop"' "$dest/config.def.h" ||
+		die "Failed to add the DISCORD define."
+	grep -q 'XK_v,.*DISCORD' "$dest/config.def.h" ||
+		die "Failed to add the DISCORD keybind."
 fi
 
 # Build as the user; sudo only for the install step

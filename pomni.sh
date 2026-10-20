@@ -316,7 +316,7 @@ FileLogger\Backup=true
 FileLogger\DeleteOld=true
 FileLogger\Enabled=true
 FileLogger\MaxSizeBytes=66560
-FileLogger\Path=/home/pm/.local/share/qBittorrent/logs
+FileLogger\Path=/home/$name/.local/share/qBittorrent/logs
 GUI\Notifications\TorrentAdded=false
 
 [BitTorrent]
@@ -355,7 +355,7 @@ LastViewedPage=0
 Size=@Size(779 591)
 
 [Preferences]
-General\CustomUIThemePath=/home/pm/.config/qBittorrent/mocha.qbtheme
+General\CustomUIThemePath=/home/$name/.config/qBittorrent/mocha.qbtheme
 General\Locale=en
 General\UseCustomUITheme=true
 

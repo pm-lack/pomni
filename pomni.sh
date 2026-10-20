@@ -316,7 +316,7 @@ FileLogger\Backup=true
 FileLogger\DeleteOld=true
 FileLogger\Enabled=true
 FileLogger\MaxSizeBytes=66560
-FileLogger\Path=/home/$name/.local/share/qBittorrent/logs
+FileLogger\Path=/home/@NAME@/.local/share/qBittorrent/logs
 GUI\Notifications\TorrentAdded=false
 
 [BitTorrent]
@@ -355,7 +355,7 @@ LastViewedPage=0
 Size=@Size(779 591)
 
 [Preferences]
-General\CustomUIThemePath=/home/$name/.config/qBittorrent/mocha.qbtheme
+General\CustomUIThemePath=/home/@NAME@/.config/qBittorrent/mocha.qbtheme
 General\Locale=en
 General\UseCustomUITheme=true
 
@@ -367,6 +367,8 @@ AutoDownloader\SmartEpisodeFilter=s(\\d+)e(\\d+), (\\d+)x(\\d+), "(\\d{4}[.\\-]\
 SplitterSizes="200,471"
 Visible=false
 EOF
+sudo -u "$name" sed -i "s|@NAME@|$name|g" "$home/.config/qBittorrent/qBittorrent.conf" ||
+	die "Failed to configure qBittorrent."
 sudo -u "$name" curl -fsSL \
 	-o "$home/.local/bin/vesktop" \
 	"https://vencord.dev/download/vesktop/amd64/appimage" ||

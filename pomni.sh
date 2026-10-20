@@ -385,7 +385,11 @@ EOF
 
 # Additional GTK accessibility fix
 sudo -u "$name" mkdir -p "$home/.local/share/dbus-1/services"
-sudo -u "$name" printf '[D-BUS Service]\nName=org.a11y.Bus\nExec=/bin/false\n' > ~/.local/share/dbus-1/services/org.a11y.Bus.service
+sudo -u "$name" sh -c 'cat > "$HOME/.local/share/dbus-1/services/org.a11y.Bus.service"' <<'EOF'
+[D-BUS Service]
+Name=org.a11y.Bus
+Exec=/bin/false
+EOF
 
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh

@@ -382,6 +382,11 @@ export NO_AT_BRIDGE=1 GTK_A11Y=none
 # Launch DWM
 dbus-launch ssh-agent dwm
 EOF
+
+# Additional GTK accessibility fix
+sudo -u "$name" mkdir -p ~/.local/share/dbus-1/services
+sudo -u "$name" printf '[D-BUS Service]\nName=org.a11y.Bus\nExec=/bin/false\n' > ~/.local/share/dbus-1/services/org.a11y.Bus.service
+
 sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
 xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.

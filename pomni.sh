@@ -377,6 +377,7 @@ dbus-update-activation-environment --all
 # Disable unused accessibility services
 pkill -f '^/usr/lib/at-spi2-registryd'
 pkill -f '^/usr/lib/at-spi-bus-launcher'
+export NO_AT_BRIDGE=1 GTK_A11Y=none
 
 # Launch DWM
 dbus-launch ssh-agent dwm

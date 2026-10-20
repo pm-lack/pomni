@@ -386,18 +386,16 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
 xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
 setbg &
-autostart="xcompmgr dunst unclutter pipewire"
 
-for program in $autostart; do
-	pidof -sx "$program" || "$program" &
-	
-done >/dev/null 2>&1
-#Volume block fix
-(
-while ! pidof -sx dwmblocks >/dev/null 2>&1; do
-sleep 1
+for program in xcompmgr dunst unclutter pipewire; do
+	pidof -sx "$program" >/dev/null 2>&1 && continue
+	"$program" >/dev/null 2>&1 &
 done
-pkill -RTMIN+10 dwmblocks
+
+# Volume block fix
+(
+	while ! pidof -sx dwmblocks >/dev/null 2>&1; do sleep 1; done
+	pkill -RTMIN+10 dwmblocks
 ) &
 EOF
 

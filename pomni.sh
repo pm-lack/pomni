@@ -294,7 +294,7 @@ if whiptail \
 	--title "Extras" \
 	--fullbuttons \
 	--yesno \
-	"Would you like to install extras?\n\n[Vesktop and qBittorrent]" \
+	"Would you like to install extras?\n\n(Vesktop and qBittorrent)" \
 	11 60; then
 	whiptail \
 		--title "Installing" \

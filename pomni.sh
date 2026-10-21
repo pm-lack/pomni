@@ -156,13 +156,17 @@ fi
 git clone --depth 1 https://github.com/zdharma-continuum/fast-syntax-highlighting /usr/share/zsh/plugins/fast-syntax-highlighting >/dev/null 2>&1 ||
 		die "Failed to clone fast-syntax-highlighting."
 
-sudo -u "$name" mkdir -p "$home/.local/bin"
-sudo -u "$name" mkdir -p "$home/.config/zsh"
-sudo -u "$name" mkdir -p "$home/.cache/zsh"
-sudo -u "$name" sh -c 'cat > "$HOME/.zshenv"' <<'EOF'
+as_user() {
+	sudo -u "$name" "$@"
+}
+
+as_user mkdir -p "$home/.local/bin"
+as_user mkdir -p "$home/.config/zsh"
+as_user mkdir -p "$home/.cache/zsh"
+as_user sh -c 'cat > "$HOME/.zshenv"' <<'EOF'
 export ZDOTDIR="$HOME/.config/zsh"
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/.config/zsh/.zshrc"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/zsh/.zshrc"' <<'EOF'
 # Enable colors and change prompt
 autoload -U colors && colors
 PS1="%{$fg[magenta]%}%n%{$reset_color%} %~ %# "
@@ -192,7 +196,7 @@ fastfetch -l ~/.config/fastfetch/rose_ascii.txt
 source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/.config/zsh/.zprofile"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/zsh/.zprofile"' <<'EOF'
 # Add all directories in `~/.local/bin` to $PATH
 export PATH="$PATH:$(find ~/.local/bin -type d | paste -sd ':' -)" # NEEDED FOR DWMBLOCKS
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -299,12 +303,12 @@ if whiptail \
 		8 50
 pacman -S --needed --noconfirm qbittorrent fuse2 btop >/dev/null 2>&1 ||
 	die "Failed to install btop and/or qBittorrent."
-sudo -u "$name" mkdir -p "$home/.config/qBittorrent"
-sudo -u "$name" curl -fsSL \
+as_user mkdir -p "$home/.config/qBittorrent"
+as_user curl -fsSL \
 	-o "$home/.config/qBittorrent/mocha.qbtheme" \
 	"https://github.com/catppuccin/qbittorrent/releases/download/v2.0.1/catppuccin-mocha.qbtheme" ||
 	die "Failed to download qBittorrent theme."
-sudo -u "$name" sh -c 'cat > "$HOME/.config/qBittorrent/qBittorrent.conf"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/qBittorrent/qBittorrent.conf"' <<'EOF'
 [Application]
 FileLogger\Age=1
 FileLogger\AgeType=1
@@ -363,14 +367,14 @@ AutoDownloader\SmartEpisodeFilter=s(\\d+)e(\\d+), (\\d+)x(\\d+), "(\\d{4}[.\\-]\
 SplitterSizes="200,471"
 Visible=false
 EOF
-sudo -u "$name" sed -i "s|@NAME@|$name|g" "$home/.config/qBittorrent/qBittorrent.conf" ||
+as_user sed -i "s|@NAME@|$name|g" "$home/.config/qBittorrent/qBittorrent.conf" ||
 	die "Failed to configure qBittorrent."
-sudo -u "$name" curl -fsSL \
+as_user curl -fsSL \
 	-o "$home/.local/bin/vesktop" \
 	"https://vencord.dev/download/vesktop/amd64/appimage" ||
 	die "Failed to download Vesktop."
 chmod +x "$home/.local/bin/vesktop"
-sudo -u "$name" curl -fsSL \
+as_user curl -fsSL \
 	-o "$home/.local/bin/musescore" \
 	"https://github.com/musescore/MuseScore/releases/download/v3.6.2/MuseScore-3.6.2.548021370-x86_64.AppImage" ||
 	die "Failed to download musescore."
@@ -434,8 +438,8 @@ pacman -S --needed --noconfirm wireplumber pipewire-pulse pulsemixer >/dev/null 
 	die "Failed to install audio."
 
 # Create pipewire exec
-sudo -u "$name" mkdir -p "$home/.config/pipewire/pipewire.conf.d"
-sudo -u "$name" sh -c 'cat > "$HOME/.config/pipewire/pipewire.conf.d/user-session.conf"' <<'EOF'
+as_user mkdir -p "$home/.config/pipewire/pipewire.conf.d"
+as_user sh -c 'cat > "$HOME/.config/pipewire/pipewire.conf.d/user-session.conf"' <<'EOF'
 context.exec = [
     { path = "/usr/bin/wireplumber" args = "" condition = [ { exec.session-manager = null } { exec.session-manager = true } ] }
     { path = "/usr/bin/pipewire" args = "-c pipewire-pulse.conf" condition = [ { exec.pipewire-pulse = null } { exec.pipewire-pulse = true } ] }
@@ -451,8 +455,8 @@ whiptail \
 
 pacman -S --needed --noconfirm libxinerama xorg-xbacklight xorg-xrandr xwallpaper libxft xorg-xinit libx11 xorg-xset freetype2 fontconfig harfbuzz xcompmgr openssh >/dev/null 2>&1 ||
 	die "Failed to install X dependencies."
-sudo -u "$name" mkdir -p "$home/.config/x11"
-sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
+as_user mkdir -p "$home/.config/x11"
+as_user sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 #!/bin/sh
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32
@@ -474,14 +478,14 @@ dbus-launch ssh-agent dwm
 EOF
 
 # Additional GTK accessibility fix
-sudo -u "$name" mkdir -p "$home/.local/share/dbus-1/services"
-sudo -u "$name" sh -c 'cat > "$HOME/.local/share/dbus-1/services/org.a11y.Bus.service"' <<'EOF'
+as_user mkdir -p "$home/.local/share/dbus-1/services"
+as_user sh -c 'cat > "$HOME/.local/share/dbus-1/services/org.a11y.Bus.service"' <<'EOF'
 [D-BUS Service]
 Name=org.a11y.Bus
 Exec=/bin/false
 EOF
 
-sudo -u "$name" sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
 xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
 setbg &
@@ -541,19 +545,19 @@ whiptail \
 	"Building dwm, dwmblocks, dmenu and st..." \
 	8 50
 
-sudo -u "$name" mkdir -p "$home/.local/src"
+as_user mkdir -p "$home/.local/src"
 
 for repo in dwm-6.8 dmenu st dwmblocks; do
 	dest="$home/.local/src/$repo"
 
 # Clone as the user so everything stays user-owned
-sudo -u "$name" env GIT_TERMINAL_PROMPT=0 \
+as_user env GIT_TERMINAL_PROMPT=0 \
 	git clone --depth 1 "https://github.com/pm-lack/$repo" "$dest" >/dev/null 2>&1 ||
 	die "Failed to clone $repo."
 
 # Enable the battery block on laptops
 if [ "$repo" = "dwmblocks" ] && [ "$laptop" -eq 1 ]; then
-	sudo -u "$name" sed -i '/sb-battery/{s|/\* *||;s| *\*/||;}' "$dest/config.h" ||
+	as_user sed -i '/sb-battery/{s|/\* *||;s| *\*/||;}' "$dest/config.h" ||
 		die "Failed to edit the dwmblocks config."
 	grep -q '^[[:space:]]*{.*sb-battery' "$dest/config.h" ||
 		die "Failed to enable the battery block."
@@ -572,7 +576,7 @@ if [ "$resolution" -gt 1 ]; then
 		*)         cfg="" ;;
 	esac
 	if [ -n "$cfg" ]; then
-		sudo -u "$name" sed -i "s|\(Misc Tamzen:size=\)[0-9][0-9]*|\1${fontsize}|g" "$cfg" ||
+		as_user sed -i "s|\(Misc Tamzen:size=\)[0-9][0-9]*|\1${fontsize}|g" "$cfg" ||
 			die "Failed to edit the $repo font size."
 		grep -q "Misc Tamzen:size=${fontsize}" "$cfg" ||
 			die "Failed to set the $repo font size."
@@ -581,7 +585,7 @@ fi
 
 # Add Discord keybind
 if [ "$repo" = "dwm-6.8" ] && [ "$vesktop" -eq 1 ]; then
-	sudo -u "$name" sed -i \
+	as_user sed -i \
 		-e '/^#define THUNAR /s~$~\n#define DISCORD "vesktop"~' \
 		-e '/XK_t,.*THUNAR/s~$~\n\t{ MODKEY|ShiftMask,\t\tXK_v,          spawn,                  {.v = (const char*[]){ DISCORD, NULL } } },~' \
 		"$dest/config.def.h" ||
@@ -593,7 +597,7 @@ if [ "$repo" = "dwm-6.8" ] && [ "$vesktop" -eq 1 ]; then
 fi
 
 # Build as the user so build files stay user-owned; install as root
-sudo -u "$name" make -C "$dest" clean all >/dev/null 2>&1 ||
+as_user make -C "$dest" clean all >/dev/null 2>&1 ||
 	die "Failed to build $repo."
 make -C "$dest" install >/dev/null 2>&1 ||
 	die "Failed to install $repo."
@@ -606,8 +610,8 @@ whiptail \
 	"Creating blocks..." \
 	8 50
 sleep 1
-sudo -u "$name" mkdir -p "$home/.local/bin/statusbar"
-sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-volume"' <<'EOF'
+as_user mkdir -p "$home/.local/bin/statusbar"
+as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-volume"' <<'EOF'
 #!/bin/sh
 PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.local/bin"
 export PATH
@@ -625,11 +629,11 @@ vol=${vol#Volume: }
 vol=$(awk -v v="$vol" 'BEGIN { printf "%.0f", v * 100 }')
 echo "[vol:$vol%]"
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'
 #!/bin/sh
 date '+[%m-%d %H:%M]'
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-internet"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-internet"' <<'EOF'
 #!/bin/sh
 case $BLOCK_BUTTON in
 1) "$TERMINAL" -e nmtui; pkill -RTMIN+4 "${STATUSBAR:-dwmblocks}" ;;
@@ -666,7 +670,7 @@ printf '%s\n' "${status:-off}"
 EOF
 # Laptop only script
 if [ "$laptop" -eq 1 ]; then
-sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'
 BAT_PATH="/sys/class/power_supply/BAT0"
 if [ -f "$BAT_PATH/capacity" ]; then
     PERCENT=$(cat "$BAT_PATH/capacity")
@@ -718,7 +722,7 @@ pacman -S --needed --noconfirm librewolf >/dev/null 2>&1 ||
 lwdir="$home/.config/librewolf/librewolf"
 
 # Start LibreWolf headless once so it generates a profile
-sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+as_user env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
 	librewolf --headless >/dev/null 2>&1 &
 
 # Wait for the profile to be generated
@@ -772,7 +776,7 @@ EOF
 chown -R "$name": "$pdir/extensions"
 
 # Librewolf prefs
-sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
+as_user sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 user_pref("browser.toolbars.bookmarks.visibility", "never");
 user_pref("browser.download.autohideButton", true);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
@@ -822,7 +826,7 @@ user_pref("zen.startup.smooth-scroll-in-tabs", true);
 EOF
 
 # Homepage
-sudo -u "$name" sh -c 'cat >> "$1/prefs.js"' sh "$pdir" <<'EOF'
+as_user sh -c 'cat >> "$1/prefs.js"' sh "$pdir" <<'EOF'
 user_pref("browser.startup.homepage", "https://lackthereof.xyz/");
 user_pref("browser.startup.page", 1);
 EOF
@@ -833,12 +837,12 @@ curl -fsSL \
 	https://raw.githubusercontent.com/pm-lack/pm-betterfox.js/refs/heads/main/user.js ||
 	die "Failed to download the LibreWolf user.js."
 { printf '\n'; cat "$TMPDIR/betterfox-user.js"; } |
-	sudo -u "$name" sh -c 'cat >> "$1/user.js"' sh "$pdir"
+	as_user sh -c 'cat >> "$1/user.js"' sh "$pdir"
 
 echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
 
 # Fix for extensions not loading on first launch
-sudo -u "$name" env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
+as_user env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
 	librewolf --headless >/dev/null 2>&1 &
 i=0
 while [ "$i" -lt 30 ]; do
@@ -864,14 +868,14 @@ pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotif
 	die "Failed to install utilities."
 
 # Dunst
-sudo -u "$name" mkdir -p "$home/.config/dunst"
+as_user mkdir -p "$home/.config/dunst"
 case $resolution in
 	2) dunstfont=13 ;;
 	3) dunstfont=14 ;;
 	4) dunstfont=15 ;;
 	*) dunstfont=12 ;;
 esac
-sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
 [global]
     monitor = 0
     follow = keyboard
@@ -895,11 +899,11 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
     frame_color = "#f5c2e7"
     timeout = 10
 EOF
-sudo -u "$name" sed -i "s|@SIZE@|$dunstfont|g" "$home/.config/dunst/dunstrc" ||
+as_user sed -i "s|@SIZE@|$dunstfont|g" "$home/.config/dunst/dunstrc" ||
 	die "Failed to configure dunst."
 
 # Wallpaper
-sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'
 #!/bin/sh
 # Location of link to wallpaper link.
 bgloc="${XDG_DATA_HOME:-$HOME/.local/share}/bg"
@@ -912,18 +916,18 @@ esac
 xwallpaper --zoom "$bgloc"
 EOF
 chmod +x "$home"/.local/bin/setbg
-sudo -u "$name" mkdir -p "$home/Pictures/wallpaper"
-sudo -u "$name" curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
+as_user mkdir -p "$home/Pictures/wallpaper"
+as_user curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
 	"https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/eva.jpg"
-sudo -u "$name" mkdir -p "$home/.local/share"
-sudo -u "$name" ln -sf "$home/Pictures/wallpaper/eva.jpg" "$home/.local/share/bg"
+as_user mkdir -p "$home/.local/share"
+as_user ln -sf "$home/Pictures/wallpaper/eva.jpg" "$home/.local/share/bg"
 
 # Fastfetch
-sudo -u "$name" mkdir -p "$home/.config/fastfetch"
-sudo -u "$name" sh -c 'cat > "$HOME/.config/fastfetch/config.jsonc"' <<'EOF'
+as_user mkdir -p "$home/.config/fastfetch"
+as_user sh -c 'cat > "$HOME/.config/fastfetch/config.jsonc"' <<'EOF'
 { "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json", "modules": [ "title", "separator", "os", "kernel", "uptime", "packages", "cpu", "wm", "memory", "colors" ] }
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/.config/fastfetch/rose_ascii.txt"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/fastfetch/rose_ascii.txt"' <<'EOF'
 $1           ,
 $1       .--'|}
 $1      /    /}}
@@ -938,7 +942,7 @@ $1        \|
 EOF
 
 # lfub
-sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/lfub"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.local/bin/lfub"' <<'EOF'
 #!/bin/sh
 # lf with image previews via ueberzugpp.
 set -e
@@ -962,15 +966,15 @@ exec 3>"$FIFO_UEBERZUG"
 lf "$@" 3>&-
 EOF
 chmod +x "$home"/.local/bin/lfub
-sudo -u "$name" mkdir -p "$home/.config/lf"
-sudo -u "$name" sh -c 'cat > "$HOME/.config/lf/cleaner"' <<'EOF'
+as_user mkdir -p "$home/.config/lf"
+as_user sh -c 'cat > "$HOME/.config/lf/cleaner"' <<'EOF'
 #!/bin/sh
 if [ -n "$FIFO_UEBERZUG" ]; then
 	printf '{"action": "remove", "identifier": "PREVIEW"}\n' > "$FIFO_UEBERZUG"
 fi
 EOF
 chmod +x "$home"/.config/lf/cleaner
-sudo -u "$name" sh -c 'cat > "$HOME/.config/lf/scope"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/lf/scope"' <<'EOF'
 #!/bin/sh
 # lf previewer. Args: $1 file, $2 width, $3 height, $4 x, $5 y
 set -C -f
@@ -1007,7 +1011,7 @@ esac
 exit 1
 EOF
 chmod +x "$home"/.config/lf/scope
-sudo -u "$name" sh -c 'cat > "$HOME/.config/lf/lfrc"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/lf/lfrc"' <<'EOF'
 set shellopts '-eu'
 set ifs "\n"
 set scrolloff 10
@@ -1031,14 +1035,14 @@ map m $mpv $f
 EOF
 
 # GTK
-sudo -u "$name" mkdir -p "$home/.config/gtk-3.0"
+as_user mkdir -p "$home/.config/gtk-3.0"
 case $resolution in
 	2) gtkfont=12 ;;
 	3) gtkfont=13 ;;
 	4) gtkfont=14 ;;
 	*) gtkfont=11 ;;
 esac
-sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/settings.ini"' <<EOF
+as_user sh -c 'cat > "$HOME/.config/gtk-3.0/settings.ini"' <<EOF
 [Settings]
 gtk-theme-name=adw-gtk3-dark
 gtk-icon-theme-name=Adwaita
@@ -1054,7 +1058,7 @@ gtk-xft-hintstyle=hintfull
 gtk-xft-rgba=rgb
 gtk-cursor-theme-name=Adwaita
 EOF
-sudo -u "$name" sh -c 'cat > "$HOME/.config/gtk-3.0/gtk.css"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.config/gtk-3.0/gtk.css"' <<'EOF'
 @define-color theme_bg_color #424242;
 @define-color theme_base_color #424242;
 @define-color theme_fg_color #e4e4e4;

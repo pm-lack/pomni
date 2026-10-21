@@ -884,7 +884,7 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
     frame_width = 3
     frame_color = "#e4e4e4"
     transparency = 25
-    font = "Tamzen Misc" ${dunstfont}
+    font = Monospace @SIZE@
     format = "<b>%s</b>\n%b"
     background = "#222222"
     foreground = "#cdd6f4"
@@ -897,6 +897,8 @@ sudo -u "$name" sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
     frame_color = "#f5c2e7"
     timeout = 10
 EOF
+sudo -u "$name" sed -i "s|@SIZE@|$dunstfont|g" "$home/.config/dunst/dunstrc" ||
+	die "Failed to configure dunst."
 
 # Wallpaper
 sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'

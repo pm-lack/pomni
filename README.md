@@ -45,7 +45,7 @@ Common
 - ModShift+Space,           Toggle floating for the focused window
 - Mod+f,                    Toggle fullscreen
 - Mod+b,                    Toggle the status bar
-- Alt+Tab,                  Cycle through windows
+- Alt+Tab,                  Cycle master
 - ModCtrl+Shift+q,          Quit dwm
 
 Layout & Navigation

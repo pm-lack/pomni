@@ -193,8 +193,8 @@ alias lf='lfub'
 fastfetch -l ~/.config/fastfetch/rose_ascii.txt
 
 # Load zsh plugins; should be last.
-source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh 2>/dev/null
+source /usr/share/zsh/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh 2>/dev/null
 EOF
 as_user sh -c 'cat > "$HOME/.config/zsh/.zprofile"' <<'EOF'
 # Add all directories in `~/.local/bin` to $PATH

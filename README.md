@@ -15,7 +15,8 @@ What it does:
 All this WITHOUT the AUR! 🎉
 
 ## Install
-
+Pomni expects a fresh [artix-base-runit](https://artixlinux.org/download.php) install with `base-devel`, `networkmanager`, and an active internet connection.  
+  
 Pomni must be run as root.
 ```
 # curl -LO https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/pomni.sh

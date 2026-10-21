@@ -267,22 +267,20 @@ case $vertical in
 	''|*[!0-9]*) vertical=""; resolution=1 ;;
 	*)           resolution=$(bucket "$vertical") ;;
 esac
-if command -v whiptail >/dev/null 2>&1; then
-	if [ -z "$vertical" ]; then
-		resolution=$(pick_resolution 1)
-	else
-		whiptail \
-			--title "Resolution detected" \
-			--fullbuttons \
-			--yesno \
-			"Detected vertical resolution: ${vertical}px\n\nIs this correct?" \
-			11 60
-		case $? in
-			0) ;;
-			1) resolution=$(pick_resolution "$resolution") ;;
-			*) resolution=1 ;;
-		esac
-	fi
+if [ -z "$vertical" ]; then
+	resolution=$(pick_resolution 1)
+else
+	whiptail \
+		--title "Resolution detected" \
+		--fullbuttons \
+		--yesno \
+		"Detected vertical resolution: ${vertical}px\n\nIs this correct?" \
+		11 60
+	case $? in
+		0) ;;
+		1) resolution=$(pick_resolution "$resolution") ;;
+		*) resolution=1 ;;
+	esac
 fi
 echo "resolution=$resolution"
 

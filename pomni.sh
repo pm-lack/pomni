@@ -286,7 +286,6 @@ else
 		*) resolution=1 ;;
 	esac
 fi
-echo "resolution=$resolution"
 
 # Extras
 vesktop=0

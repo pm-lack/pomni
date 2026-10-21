@@ -12,14 +12,6 @@ TMPDIR=$(mktemp -d) || exit 1
 # Cleanup when the script exits
 cleanup() {
 	rm -rf "$TMPDIR"
-
-	if [ -f /etc/sudoers.d/wheel ]; then
-		printf '%s\n' \
-			'%wheel ALL=(ALL:ALL) ALL' \
-			'%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/shutdown, /usr/bin/halt, /usr/bin/reboot' \
-			> /etc/sudoers.d/wheel
-			chmod 440 /etc/sudoers.d/wheel
-	fi
 }
 trap cleanup EXIT
 
@@ -149,10 +141,16 @@ printf '%s:%s\n' "$name" "$password" | chpasswd ||
 
 unset password
 
-# Sudo fix
-printf '%s\n' '%wheel ALL=(ALL) NOPASSWD: ALL' \
-	>/etc/sudoers.d/wheel
-chmod 440 /etc/sudoers.d/wheel
+# Sudo rules
+cat > /etc/sudoers.d/pomni-wheel <<'EOF'
+%wheel ALL=(ALL:ALL) ALL
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/shutdown,/usr/bin/halt,/usr/bin/reboot,/usr/bin/pacman -Syu
+EOF
+chmod 440 /etc/sudoers.d/pomni-wheel
+if ! visudo -cf /etc/sudoers.d/pomni-wheel >/dev/null 2>&1; then
+	rm -f /etc/sudoers.d/pomni-wheel
+	die "The generated sudoers rules are invalid."
+fi
 
 # Zsh config
 git clone --depth 1 https://github.com/zdharma-continuum/fast-syntax-highlighting /usr/share/zsh/plugins/fast-syntax-highlighting >/dev/null 2>&1 ||
@@ -596,9 +594,11 @@ if [ "$repo" = "dwm-6.8" ] && [ "$vesktop" -eq 1 ]; then
 		die "Failed to add the DISCORD keybind."
 fi
 
-# Build as the user; sudo only for the install step
-sudo -u "$name" sudo make -C "$dest" clean install >/dev/null 2>&1 ||
-	die "Failed to build and install $repo."
+# Build as the user so build files stay user-owned; install as root
+sudo -u "$name" make -C "$dest" clean all >/dev/null 2>&1 ||
+	die "Failed to build $repo."
+make -C "$dest" install >/dev/null 2>&1 ||
+	die "Failed to install $repo."
 done
 
 # Creating blocks

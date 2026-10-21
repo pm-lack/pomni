@@ -670,6 +670,7 @@ EOF
 # Laptop only script
 if [ "$laptop" -eq 1 ]; then
 as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'
+#!/bin/sh
 BAT_PATH="/sys/class/power_supply/BAT0"
 if [ -f "$BAT_PATH/capacity" ]; then
     PERCENT=$(cat "$BAT_PATH/capacity")
@@ -838,7 +839,7 @@ curl -fsSL \
 { printf '\n'; cat "$TMPDIR/betterfox-user.js"; } |
 	as_user sh -c 'cat >> "$1/user.js"' sh "$pdir"
 
-echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
+as_user echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
 
 # Fix for extensions not loading on first launch
 as_user env HOME="$home" XDG_CONFIG_HOME="$home/.config" \

@@ -892,6 +892,9 @@ EOF
 as_user sed -i "s|@SIZE@|$dunstfont|g" "$home/.config/dunst/dunstrc" ||
 	die "Failed to configure dunst."
 
+# GTK 4 Dark Theme
+as_user gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+
 # Wallpaper
 as_user sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'
 #!/bin/sh
@@ -1047,6 +1050,7 @@ gtk-xft-hinting=1
 gtk-xft-hintstyle=hintfull
 gtk-xft-rgba=rgb
 gtk-cursor-theme-name=Adwaita
+gtk-application-prefer-dark-theme=true
 EOF
 as_user sh -c 'cat > "$HOME/.config/gtk-3.0/gtk.css"' <<'EOF'
 @define-color theme_bg_color #424242;

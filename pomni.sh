@@ -596,13 +596,11 @@ if [ "$repo" = "dwm-6.8" ] && [ "$vesktop" -eq 1 ]; then
 fi
 
 # Build as the user so build files stay user-owned; install as root
-if ! as_user make -C "$dest" clean all; then
-    die "Failed to build $repo. Check the terminal for errors."
-fi
-
+as_user make -C "$dest" clean >/dev/null 2>&1 &&
+    as_user make -C "$dest" >/dev/null 2>&1 ||
+    die "Failed to build $repo."
 make -C "$dest" install >/dev/null 2>&1 ||
     die "Failed to install $repo."
-
 done
 
 # Creating blocks

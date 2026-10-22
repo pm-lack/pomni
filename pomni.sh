@@ -459,6 +459,8 @@ as_user sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 #!/bin/sh
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32
+xrandr --dpi 96
+setbg &
 
 # xprofile
 [ -r "$HOME/.config/x11/xprofile" ] &&
@@ -486,9 +488,6 @@ EOF
 
 as_user sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
-xrandr --dpi 96		# Set DPI. User may want to use a larger number for larger screens.
-setbg &
-
 for program in xcompmgr dunst unclutter pipewire; do
 	pidof -sx "$program" >/dev/null 2>&1 && continue
 	"$program" >/dev/null 2>&1 &

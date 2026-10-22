@@ -775,8 +775,17 @@ dollchan_extension dollchan_extension@dollchan.net
 EOF
 chown -R "$name": "$pdir/extensions"
 
-# Librewolf prefs
+# Betterfox-based prefs
+curl -fsSL \
+	-o "$TMPDIR/betterfox-user.js" \
+	https://raw.githubusercontent.com/pm-lack/pm-betterfox.js/refs/heads/main/user.js ||
+	die "Failed to download the LibreWolf user.js."
+as_user sh -c 'cat > "$1/user.js"' sh "$pdir" < "$TMPDIR/betterfox-user.js"
+
+# Pomni-specific prefs
 as_user sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
+ 
+/** pomni overrides ***/
 user_pref("browser.toolbars.bookmarks.visibility", "never");
 user_pref("browser.download.autohideButton", true);
 user_pref("svg.context-properties.content.enabled", true);
@@ -800,7 +809,15 @@ user_pref("browser.sessionhistory.max_entries", 25);
 user_pref("image.mem.surfacecache.max_size_kb", 262144);
 user_pref("browser.sessionstore.max_tabs_undo", 15);
 user_pref("browser.startup.page", 3);
+
+/** DRM / Widevine ***/
+user_pref("media.eme.enabled", true);
+user_pref("media.gmp-provider.enabled", true);
+user_pref("media.gmp-widevinecdm.visible", true);
+user_pref("media.gmp-widevinecdm.enabled", true);
+user_pref("media.gmp-widevinecdm.autoupdate", true);
 EOF
+
 
 # Homepage
 as_user sh -c 'cat >> "$1/prefs.js"' sh "$pdir" <<'EOF'
@@ -808,15 +825,11 @@ user_pref("browser.startup.homepage", "https://lackthereof.xyz/");
 user_pref("browser.startup.page", 1);
 EOF
 
-# Betterfox-based prefs
-curl -fsSL \
-	-o "$TMPDIR/betterfox-user.js" \
-	https://raw.githubusercontent.com/pm-lack/pm-betterfox.js/refs/heads/main/user.js ||
-	die "Failed to download the LibreWolf user.js."
-{ printf '\n'; cat "$TMPDIR/betterfox-user.js"; } |
-	as_user sh -c 'cat >> "$1/user.js"' sh "$pdir"
-
-as_user echo "* { border-radius: 0px !important; }" >> "$pdir/chrome/userChrome.css"
+# Square corners tweak
+as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'
+ 
+* { border-radius: 0px !important; }
+EOF
 
 # Fix for extensions not loading on first launch
 as_user env HOME="$home" XDG_CONFIG_HOME="$home/.config" \

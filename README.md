@@ -25,7 +25,7 @@ Pomni must be run as root.
 ```
 
 ## Post Install
-Add your monitor details to your xinitrc (in ~/.config/x11/) above dbus. Example:  
+Add your monitor details to your xinitrc (in ~/.config/x11/) above ```setbg &```. Example:  
 ```
 xrandr \
   --output HDMI-0 --mode 2560x1440 --rate 240 --primary --pos 0x0 \

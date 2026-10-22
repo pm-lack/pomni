@@ -822,7 +822,14 @@ user_pref("gfx.use_text_smoothing_setting", false);
 user_pref("layout.css.osx-font-smoothing.enabled", false);
 user_pref("media.mediacapabilities.webrtc-encode-smooth-override", 0);
 user_pref("toolkit.scrollbox.smoothScroll", true);
-user_pref("zen.startup.smooth-scroll-in-tabs", true);
+user_pref("fission.webContentIsolationStrategy", 2);
+user_pref("dom.ipc.processCount", 6);
+user_pref("dom.ipc.processPrelaunch.enabled", false);
+user_pref("browser.sessionhistory.max_total_viewers", 3);
+user_pref("browser.sessionhistory.max_entries", 25);
+user_pref("image.mem.surfacecache.max_size_kb", 262144);
+user_pref("browser.sessionstore.max_tabs_undo", 15);
+user_pref("browser.startup.page", 3);
 EOF
 
 # Homepage

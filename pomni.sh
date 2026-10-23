@@ -435,6 +435,7 @@ whiptail \
 	8 50
 pacman -S --needed --noconfirm wireplumber pipewire-pulse pulsemixer >/dev/null 2>&1 ||
 	die "Failed to install audio."
+wpctl set-volume @DEFAULT_SINK@ 70%
 
 # Create pipewire exec
 as_user mkdir -p "$home/.config/pipewire/pipewire.conf.d"

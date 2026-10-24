@@ -855,8 +855,22 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler fastfetch >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler fastfetch xdg-user-dirs >/dev/null 2>&1 ||
 	die "Failed to install utilities."
+
+# Make and pin user directories
+as_user sh -c '
+	xdg-user-dirs-update
+	. "${XDG_CONFIG_HOME:-$HOME/.config}/user-dirs.dirs"
+	bm="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/bookmarks"
+	mkdir -p "$(dirname "$bm")"
+	touch "$bm"
+	for dir in "$XDG_DOCUMENTS_DIR" "$XDG_DOWNLOAD_DIR" "$XDG_MUSIC_DIR" \
+	           "$XDG_PICTURES_DIR" "$XDG_VIDEOS_DIR"; do
+		line="file://$dir"
+		grep -qxF "$line" "$bm" || echo "$line" >> "$bm"
+	done
+' || die "Failed to set up the user directories."
 
 # Dunst
 as_user mkdir -p "$home/.config/dunst"

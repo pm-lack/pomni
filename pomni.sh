@@ -774,7 +774,6 @@ while read -r slug id; do
 		"https://addons.mozilla.org/firefox/downloads/latest/$slug/latest.xpi" ||
 		die "Failed to download the $slug extension."
 done <<'EOF'
-darkreader addon@darkreader.org
 dollchan_extension dollchan_extension@dollchan.net
 EOF
 chown -R "$name": "$pdir/extensions"
@@ -813,6 +812,8 @@ user_pref("browser.sessionhistory.max_entries", 25);
 user_pref("image.mem.surfacecache.max_size_kb", 262144);
 user_pref("browser.sessionstore.max_tabs_undo", 15);
 user_pref("browser.startup.page", 3);
+user_pref("layout.css.font-visibility.resistFingerprinting", 3);
+user_pref("layout.css.prefers-color-scheme.content-override", 0);
 
 /** DRM / Widevine ***/
 user_pref("media.eme.enabled", true);
@@ -840,8 +841,7 @@ as_user env HOME="$home" XDG_CONFIG_HOME="$home/.config" \
 	librewolf --headless >/dev/null 2>&1 &
 i=0
 while [ "$i" -lt 30 ]; do
-	if grep -q 'addon@darkreader.org' "$pdir/extensions.json" 2>/dev/null &&
-	   grep -q 'dollchan_extension@dollchan.net' "$pdir/extensions.json" 2>/dev/null; then
+	if grep -q 'dollchan_extension@dollchan.net' "$pdir/extensions.json" 2>/dev/null; then
 		break
 	fi
 	i=$((i + 1))

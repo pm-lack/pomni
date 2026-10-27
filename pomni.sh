@@ -842,10 +842,11 @@ user_pref("browser.startup.homepage", "https://lackthereof.xyz/");
 user_pref("browser.startup.page", 1);
 EOF
 
-# Square corners tweak
+# Square corners tweak / Remove All Tabs button
 as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'
  
 * { border-radius: 0px !important; }
+#alltabs-button { display: none !important; }
 EOF
 
 # Fix for extensions not loading on first launch

@@ -794,6 +794,7 @@ as_user sh -c 'cat >> "$1/user.js"' sh "$pdir" <<'EOF'
 /** pomni overrides ***/
 user_pref("browser.toolbars.bookmarks.visibility", "never");
 user_pref("browser.download.autohideButton", true);
+user_pref("browser.tabs.tabmanager.enabled", false);
 user_pref("svg.context-properties.content.enabled", true);
 user_pref("layout.css.has-selector.enabled", true);
 user_pref("extensions.autoDisableScopes", 0);

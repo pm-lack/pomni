@@ -1106,7 +1106,7 @@ sed -i '/^# BEGIN pomni hosts$/,/^# END pomni hosts$/d' /etc/hosts
 sleep 1
 
 # Beep fix
-rmmod pcspkr
+rmmod pcspkr >/dev/null 2>&1 || true
 echo "blacklist pcspkr" >/etc/modprobe.d/nobeep.conf
 
 # Finished

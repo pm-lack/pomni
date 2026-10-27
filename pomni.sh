@@ -227,19 +227,20 @@ fi
 
 # Resolution detection
 detect_vertical() {
-	local c mode v
 	for c in /sys/class/drm/card*-*; do
 		[ -r "$c/status" ] || continue
-		[ "$(cat "$c/status")" = connected ] || continue
-		mode=$(head -n1 "$c/modes" 2>/dev/null)
+		read -r st < "$c/status" || continue
+		[ "$st" = connected ] || continue
+		read -r mode < "$c/modes" 2>/dev/null || continue
 		v=${mode#*x}
 		v=${v%%[!0-9]*}
 		[ -n "$v" ] || continue
-		echo "$v"
+		printf '%s\n' "$v"
 		return 0
 	done
 	return 1
 }
+
 bucket() {
 	if   [ "$1" -le 800 ];  then echo 1
 	elif [ "$1" -le 1200 ]; then echo 2
@@ -247,8 +248,8 @@ bucket() {
 	else                         echo 4
 	fi
 }
+
 pick_resolution() {
-	local choice
 	choice=$(whiptail \
 		--title "Display scaling" \
 		--fullbuttons \
@@ -262,15 +263,17 @@ pick_resolution() {
 		4 "More than 1440px" \
 		3>&1 1>&2 2>&3) || choice=""
 	case $choice in
-		1|2|3|4) echo "$choice" ;;
+		1|2|3|4) printf '%s\n' "$choice" ;;
 		*)       echo 1 ;;
 	esac
 }
+
 vertical=$(detect_vertical) || vertical=""
 case $vertical in
 	''|*[!0-9]*) vertical=""; resolution=1 ;;
 	*)           resolution=$(bucket "$vertical") ;;
 esac
+
 if [ -z "$vertical" ]; then
 	resolution=$(pick_resolution 1)
 else

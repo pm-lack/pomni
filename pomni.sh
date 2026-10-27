@@ -473,6 +473,9 @@ xrandr --dpi 96
 # Set wallpaper on start
 setbg &
 
+# GTK 4 Dark Mode
+gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+
 # xprofile
 [ -r "$HOME/.config/x11/xprofile" ] &&
 	. "$HOME/.config/x11/xprofile"
@@ -922,9 +925,6 @@ as_user sh -c 'cat > "$HOME/.config/dunst/dunstrc"' <<'EOF'
 EOF
 as_user sed -i "s|@SIZE@|$dunstfont|g" "$home/.config/dunst/dunstrc" ||
 	die "Failed to configure dunst."
-
-# GTK 4 Dark Theme
-as_user gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 
 # Wallpaper
 as_user sh -c 'cat > "$HOME/.local/bin/setbg"' <<'EOF'

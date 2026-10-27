@@ -464,6 +464,13 @@ as_user sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32
 xrandr --dpi 96
+
+# Example Monitor config
+#xrandr \
+#  --output HDMI-0 --mode 2560x1440 --rate 240 --primary --pos 0x0 \
+#  --output DP-0 --mode 2560x1440 --rate 165 --pos 2560x0
+
+# Set wallpaper on start
 setbg &
 
 # xprofile

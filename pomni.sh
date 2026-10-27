@@ -501,11 +501,11 @@ done
 ) &
 EOF
 
-# Tamzen font
+# Fonts
 whiptail \
 	--title "Installing" \
 	--infobox \
-	"Installing tamzen font..." \
+	"Installing fonts..." \
 	8 50
 git clone --depth 1 https://github.com/sunaku/tamzen-font.git "$TMPDIR/tamzen-font" >/dev/null 2>&1 ||
 	die "Failed to clone tamzen-font."
@@ -533,6 +533,9 @@ sh -c 'cat > "/etc/fonts/conf.d/60-tamzen.conf"' <<'EOF'
   </alias>
 </fontconfig>
 EOF
+
+pacman -S --needed --noconfirm ttf-sarasa-gothic >/dev/null 2>&1 ||
+	die "Failed to install CJK font."
 
 fc-cache -f >/dev/null 2>&1 ||
 	die "Failed to update the font cache."

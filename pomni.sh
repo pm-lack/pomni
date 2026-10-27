@@ -768,12 +768,21 @@ esac
 	die "Could not locate the LibreWolf profile."
 
 # FirefoxCSS theme
+#GIT_TERMINAL_PROMPT=0 git clone --depth 1 \
+#	https://github.com/Bali10050/FirefoxCSS "$TMPDIR/FirefoxCSS" >/dev/null 2>&1 ||
+#	die "Failed to clone FirefoxCSS."
+#mkdir -p "$pdir/chrome"
+#cp -a "$TMPDIR/FirefoxCSS/chrome/." "$pdir/chrome/" ||
+#	die "Failed to copy the FirefoxCSS theme."
+#chown -R "$name": "$pdir/chrome"
+
+# FoxOne theme
 GIT_TERMINAL_PROMPT=0 git clone --depth 1 \
-	https://github.com/Bali10050/FirefoxCSS "$TMPDIR/FirefoxCSS" >/dev/null 2>&1 ||
-	die "Failed to clone FirefoxCSS."
+	https://github.com/Firnschnee/FoxOne "$TMPDIR/FoxOne" >/dev/null 2>&1 ||
+	die "Failed to clone FoxOne."
 mkdir -p "$pdir/chrome"
-cp -a "$TMPDIR/FirefoxCSS/chrome/." "$pdir/chrome/" ||
-	die "Failed to copy the FirefoxCSS theme."
+cp -a "$TMPDIR/FoxOne/chrome/." "$pdir/chrome/" ||
+	die "Failed to copy the FoxOne theme."
 chown -R "$name": "$pdir/chrome"
 
 # Extensions (sideloaded into the profile)

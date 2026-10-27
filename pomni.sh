@@ -841,7 +841,7 @@ EOF
 
 # Homepage
 as_user sh -c 'cat >> "$1/prefs.js"' sh "$pdir" <<'EOF'
-user_pref("browser.startup.homepage", "https://lackthereof.xyz/");
+user_pref("browser.startup.homepage", "https://lackthereof.xyz|https://github.com/pm-lack/pomni|https://distrowatch.com/table.php?distribution=artix");
 user_pref("browser.startup.page", 1);
 EOF
 

@@ -582,8 +582,8 @@ fi
 if [ "$resolution" -gt 1 ]; then
 	case $resolution in
 		2) fontsize=13 ;;
-		3) fontsize=18 ;;
-		4) fontsize=27 ;;
+		3) fontsize=17 ;;
+		4) fontsize=26 ;;
 	esac
 	case $repo in
 		dwm-6.8)   cfg="$dest/config.def.h" ;;
@@ -836,6 +836,9 @@ user_pref("media.gmp-provider.enabled", true);
 user_pref("media.gmp-widevinecdm.visible", true);
 user_pref("media.gmp-widevinecdm.enabled", true);
 user_pref("media.gmp-widevinecdm.autoupdate", true);
+user_pref("media.gmp-manager.updateEnabled", true);
+user_pref("media.gmp-manager.checkContentSignature", true);
+user_pref("media.gmp-manager.cert.requireBuiltIn", true);
 EOF
 
 

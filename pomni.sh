@@ -449,6 +449,15 @@ context.exec = [
 ]
 EOF
 
+# Low latency pipewire config
+as_user sh -c 'cat > "$HOME/.config/pipewire/pipewire.conf.d/99-lowlatency.conf"' <<'EOF'
+context.properties = {
+    default.clock.quantum = 64
+    default.clock.min-quantum = 32
+    default.clock.max-quantum = 64
+}
+EOF
+
 # X dependencies 
 whiptail \
 	--title "Installing" \

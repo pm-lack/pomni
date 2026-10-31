@@ -1104,6 +1104,25 @@ as_user sh -c 'cat > "$HOME/.config/gtk-3.0/gtk.css"' <<'EOF'
 @define-color theme_selected_fg_color #e4e4e4;
 EOF
 
+# Beep fix
+rmmod pcspkr >/dev/null 2>&1 || true
+echo "blacklist pcspkr" >/etc/modprobe.d/nobeep.conf
+
+# Gamescope priority and scheduling fix
+mkdir -p /etc/pacman.d/hooks
+sh -c 'cat > /etc/pacman.d/hooks/gamescope-cap.hook' <<'EOF'
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = gamescope*
+
+[Action]
+Description = Setting CAP_SYS_NICE on gamescope
+When = PostTransaction
+Exec = /usr/bin/setcap cap_sys_nice=eip /usr/bin/gamescope
+EOF
+
 # Host blocker
 whiptail \
 	--title "Installing" \
@@ -1126,10 +1145,6 @@ sed -i '/^# BEGIN pomni hosts$/,/^# END pomni hosts$/d' /etc/hosts
 	printf '\n# END pomni hosts\n'
 } >> /etc/hosts
 sleep 1
-
-# Beep fix
-rmmod pcspkr >/dev/null 2>&1 || true
-echo "blacklist pcspkr" >/etc/modprobe.d/nobeep.conf
 
 # Finished
 whiptail \

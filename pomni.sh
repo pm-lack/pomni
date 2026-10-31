@@ -1131,6 +1131,30 @@ When = PostTransaction
 Exec = /usr/bin/setcap cap_sys_nice=eip /usr/bin/gamescope
 EOF
 
+# Mimeapps
+as_user sh -c 'cat > "$HOME/.config/mimeapps.list"' <<'EOF'
+[Default Applications]
+text/html=librewolf.desktop
+x-scheme-handler/http=librewolf.desktop
+x-scheme-handler/https=librewolf.desktop
+x-scheme-handler/magnet=org.qbittorrent.qBittorrent.desktop
+application/x-bittorrent=org.qbittorrent.qBittorrent.desktop
+application/pdf=librewolf.desktop
+image/svg+xml=librewolf.desktop
+text/plain=org.xfce.mousepad.desktop
+image/png=nsxiv.desktop
+image/jpeg=nsxiv.desktop
+image/gif=nsxiv.desktop
+image/bmp=nsxiv.desktop
+video/x-matroska=mpv.desktop
+video/mp4=mpv.desktop
+video/x-matroska=mpv.desktop
+video/webm=mpv.desktop
+audio/mpeg=mpv.desktop
+audio/flac=mpv.desktop
+audio/ogg=mpv.desktop
+EOF
+
 # Host blocker
 whiptail \
 	--title "Installing" \

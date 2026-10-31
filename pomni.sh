@@ -106,8 +106,8 @@ fi
 unset password_confirm
 
 # Initialize and populate the keyring
-pacman-key --init
-pacman-key --populate
+pacman-key --init >/dev/null 2>&1
+pacman-key --populate >/dev/null 2>&1
 
 
 # Install git and zsh

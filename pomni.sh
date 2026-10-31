@@ -209,6 +209,8 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export TERMINAL="st"
 export XINITRC="$XDG_CONFIG_HOME/x11/xinitrc"
 export MOZ_USE_XINPUT2=1                  # Mozilla smooth scrolling/touchpads.
+export EDITOR="vim"
+export BROWSER="librewolf"
 # Start graphical server on user's current tty if not already running.
 [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
 EOF

@@ -698,19 +698,20 @@ status="$wifi"
 [ -n "$ethernet" ] && status="${status:+$status }$ethernet"
 printf '%s\n' "${status:-off}"
 EOF
+
 # Laptop only script
 if [ "$laptop" -eq 1 ]; then
 as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'
 #!/bin/sh
-BAT_PATH="/sys/class/power_supply/BAT0"
-if [ -f "$BAT_PATH/capacity" ]; then
-    PERCENT=$(cat "$BAT_PATH/capacity")
-    echo "[bat:${PERCENT}%]"
-else
-    echo "[bat:N/A]"
-fi
+for bat in /sys/class/power_supply/BAT*; do
+	[ -r "$bat/capacity" ] || continue
+	echo "[bat:$(cat "$bat/capacity")%]"
+	exit
+done
+echo "[bat:N/A]"
 EOF
 fi
+
 # Make blocks runable
 chmod +x "$home"/.local/bin/statusbar/sb-*
 

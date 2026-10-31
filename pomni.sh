@@ -105,6 +105,11 @@ fi
 
 unset password_confirm
 
+# Initialize and populate the keyring
+pacman-key --init
+pacman-key --populate
+
+
 # Install git and zsh
 whiptail \
 	--title "Installing" \

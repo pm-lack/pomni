@@ -190,9 +190,12 @@ compinit
 _comp_options+=(globdots)
 
 # Alias
-alias ll='ls -lah'
+alias ll='ls -lahN --color=auto --group-directories-first'
+alias grep='grep --color=auto'
 alias susu='sudo su root'
 alias lf='lfub'
+alias mv='mv -iv'
+alias rm='rm -vI'
 
 # Fetch
 fastfetch -l ~/.config/fastfetch/rose_ascii.txt

@@ -465,6 +465,12 @@ context.properties = {
 }
 EOF
 
+# pulseaudio idle fix
+as_user mkdir -p "$home/.config/pulse"
+as_user sh -c 'cat > "$HOME/.config/pulse/daemon.conf"' <<'EOF'
+exit-idle-time = -1
+EOF
+
 # X dependencies 
 whiptail \
 	--title "Installing" \

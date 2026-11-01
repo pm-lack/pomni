@@ -158,6 +158,7 @@ if ! visudo -cf /etc/sudoers.d/pomni-wheel >/dev/null 2>&1; then
 fi
 
 # Zsh config
+rm -rf /usr/share/zsh/plugins/fast-syntax-highlighting
 git clone --depth 1 https://github.com/zdharma-continuum/fast-syntax-highlighting /usr/share/zsh/plugins/fast-syntax-highlighting >/dev/null 2>&1 ||
 		die "Failed to clone fast-syntax-highlighting."
 
@@ -590,6 +591,9 @@ as_user mkdir -p "$home/.local/src"
 
 for repo in dwm-6.8 dmenu st dwmblocks; do
 	dest="$home/.local/src/$repo"
+
+# Delete build from previous run
+as_user rm -rf "$dest"
 
 # Clone as the user so everything stays user-owned
 as_user env GIT_TERMINAL_PROMPT=0 \

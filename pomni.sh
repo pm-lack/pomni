@@ -1161,6 +1161,10 @@ audio/flac=mpv.desktop
 audio/ogg=mpv.desktop
 EOF
 
+# Colorful pacman
+grep -q "ILoveCandy" /etc/pacman.conf || sed -i "/#VerbosePkgLists/a ILoveCandy" /etc/pacman.conf
+sed -Ei "s/^#(ParallelDownloads).*/\1 = 5/;/^#Color$/s/#//" /etc/pacman.conf
+
 # Host blocker
 whiptail \
 	--title "Installing" \

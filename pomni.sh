@@ -870,9 +870,11 @@ EOF
 
 
 # Homepage
+if ! grep -q 'browser.startup.homepage' "$pdir/prefs.js" 2>/dev/null; then
 as_user sh -c 'cat >> "$1/prefs.js"' sh "$pdir" <<'EOF'
 user_pref("browser.startup.homepage", "https://lackthereof.xyz|https://github.com/pm-lack/pomni|https://distrowatch.com/table.php?distribution=artix");
 EOF
+fi
 
 # Square corners tweak / Remove All Tabs button
 as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'

@@ -190,6 +190,7 @@ compinit
 _comp_options+=(globdots)
 
 # Alias
+alias ls='ls -hN --color=auto --group-directories-first'
 alias ll='ls -lahN --color=auto --group-directories-first'
 alias grep='grep --color=auto'
 alias susu='sudo su root'

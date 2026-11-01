@@ -852,7 +852,7 @@ user_pref("browser.sessionhistory.max_total_viewers", 3);
 user_pref("browser.sessionhistory.max_entries", 25);
 user_pref("image.mem.surfacecache.max_size_kb", 262144);
 user_pref("browser.sessionstore.max_tabs_undo", 15);
-user_pref("browser.startup.page", 3);
+user_pref("browser.startup.page", 1);
 user_pref("privacy.resistFingerprinting", false);
 user_pref("layout.css.font-visibility.resistFingerprinting", 3);
 user_pref("layout.css.prefers-color-scheme.content-override", 0);
@@ -872,7 +872,6 @@ EOF
 # Homepage
 as_user sh -c 'cat >> "$1/prefs.js"' sh "$pdir" <<'EOF'
 user_pref("browser.startup.homepage", "https://lackthereof.xyz|https://github.com/pm-lack/pomni|https://distrowatch.com/table.php?distribution=artix");
-user_pref("browser.startup.page", 1);
 EOF
 
 # Square corners tweak / Remove All Tabs button

@@ -606,7 +606,6 @@ wintypes:
     popup_menu    = { shadow = false; };
     utility       = { shadow = false; };
 };
-glx-no-stencil = true;
 glx-copy-from-front = false;
 EOF
 

@@ -483,7 +483,7 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
-pacman -S --needed --noconfirm libxinerama xorg-xbacklight xorg-xrandr xwallpaper libxft xorg-xinit libx11 xorg-xset freetype2 fontconfig harfbuzz picom openssh >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm libxinerama xorg-xbacklight xorg-xrandr xwallpaper libxft xorg-xinit libx11 xorg-xset freetype2 fontconfig harfbuzz picom mesa-utils openssh >/dev/null 2>&1 ||
 	die "Failed to install X dependencies."
 as_user mkdir -p "$home/.config/x11"
 as_user sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'

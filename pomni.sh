@@ -773,9 +773,34 @@ if [ "$laptop" -eq 1 ]; then
 as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-battery"' <<'EOF'
 #!/bin/sh
 for bat in /sys/class/power_supply/BAT*; do
-	[ -r "$bat/capacity" ] || continue
-	echo "[bat:$(cat "$bat/capacity")%]"
-	exit
+    [ -r "$bat/capacity" ] || continue
+    cap=$(cat "$bat/capacity")
+
+    case $BLOCK_BUTTON in
+    1)    status=$(cat "$bat/status" 2>/dev/null)
+        if [ -r "$bat/energy_now" ]; then
+            now=$(cat "$bat/energy_now"); full=$(cat "$bat/energy_full")
+            rate=$(cat "$bat/power_now" 2>/dev/null)
+        elif [ -r "$bat/charge_now" ]; then
+            now=$(cat "$bat/charge_now"); full=$(cat "$bat/charge_full")
+            rate=$(cat "$bat/current_now" 2>/dev/null)
+        fi
+        case $status in
+        Discharging|Charging)
+            est=$(awk -v n="${now:-0}" -v f="${full:-0}" -v r="${rate:-0}" -v s="$status" '
+                BEGIN {
+                    if (r <= 0) { print "estimate unavailable"; exit }
+                    sec = (s == "Discharging") ? n * 3600 / r : (f - n) * 3600 / r
+                    printf "~%dh %02dm %s", sec / 3600, (sec % 3600) / 60,
+                        (s == "Discharging" ? "remaining" : "until full")
+                }') ;;
+        *)    est="" ;;
+        esac
+        notify-send -h string:x-dunst-stack-tag:sb-battery "$status" "$est" ;;
+    esac
+
+    echo "[bat:$cap%]"
+    exit
 done
 echo "[bat:N/A]"
 EOF

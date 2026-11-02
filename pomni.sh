@@ -1020,6 +1020,8 @@ chmod +x "$home"/.local/bin/setbg
 as_user mkdir -p "$home/Pictures/wallpaper"
 as_user curl -fsSL -o "$home/Pictures/wallpaper/eva.jpg" \
 	"https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/eva.jpg"
+as_user curl -fsSL -o "$home/Pictures/wallpaper/clouds.jpg" \
+	"https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/clouds.jpg"
 as_user mkdir -p "$home/.local/share"
 as_user ln -sf "$home/Pictures/wallpaper/eva.jpg" "$home/.local/share/bg"
 

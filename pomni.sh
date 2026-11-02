@@ -489,7 +489,7 @@ as_user mkdir -p "$home/.config/x11"
 as_user sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 #!/bin/sh
 # Picom
-picom --backend xrender -b
+picom -b
 
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32
@@ -547,8 +547,8 @@ EOF
 # Picom
 as_user mkdir -p "$home/.config/picom"
 as_user sh -c 'cat > "$HOME/.config/picom/picom.conf"' <<'EOF'
-backend = "glx";
-use-damage = false;
+backend = "xrender";
+use-damage = true;
 xrender-sync-fence = true;
 vsync = true;
 shadow = true;

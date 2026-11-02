@@ -2,12 +2,12 @@
 ![ScreenShot](https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/screenshot.png)
 Pomni is a post-install setup script intended for use on artix-base-runit.
 What it does:
-- Creates a new user (or reconfigures an existing one), sets the password, adds them to wheel, and sets zsh as the login shell
+- Creates a new user (or reconfigures an existing one), sets the password, adds them to wheel, and sets zsh as the default shell
 - Configures zsh with a custom prompt, history, completion, autosuggestions, fast-syntax-highlighting and a fastfetch greeting
 - Adds the XLibre [repository](https://github.com/xlibre-artix/xlibre-artix) and signing key, then installs [XLibre](https://github.com/X11Libre/xserver) as the X server
 - Installs and configures PipeWire and WirePlumber with PulseAudio compatibility
 - Builds and installs pre-patched [dwm](https://github.com/pm-lack/dwm-6.8), [dmenu](https://github.com/pm-lack/dmenu), [st](https://github.com/pm-lack/st) and [dwmblocks](https://github.com/pm-lack/dwmblocks) from source, with statusbar blocks for volume, RAM usage (needs to be enabled manually), battery (laptop auto-detection in script), a clock, and networking
-- Installs LibreWolf with a custom [FirefoxCSS](https://github.com/Bali10050/FirefoxCSS) theme, Dark Reader and Dollchan extensions, and [Betterfox-based prefs](https://github.com/pm-lack/pm-betterfox.js)
+- Installs LibreWolf with a custom [FirefoxCSS](https://github.com/Bali10050/FirefoxCSS) theme, the [Dollchan](https://github.com/SthephanShinkufag/Dollchan-Extension-Tools) extension, and [Betterfox-based prefs](https://github.com/pm-lack/pm-betterfox.js)
 - Installs utilities like lf (with image previews via ueberzugpp), nsxiv, mpv, Thunar, dunst, maim, xcompmgr, unclutter and more
 - Installs the [Tamzen](https://github.com/sunaku/tamzen-font) bitmap font, applies a dark GTK3 theme, and sets a wallpaper
 - Appends a hosts-based ad/tracker [blocklist](https://github.com/pm-lack/hosts) to /etc/hosts
@@ -19,18 +19,33 @@ Pomni expects a fresh [artix-base-runit](https://artixlinux.org/download.php) in
   
 Pomni must be run as root.
 ```
-# curl -LO https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/pomni.sh
-# chmod +x pomni.sh
-# sh pomni.sh
+curl -LO https://raw.githubusercontent.com/pm-lack/pomni/refs/heads/main/pomni.sh
+chmod +x pomni.sh
+sh pomni.sh
 ```
 
 ## Post Install
-Add your monitor details to your xinitrc (in ~/.config/x11/) above ```setbg &```. Example:  
+Add your monitor details to your xinitrc (in `~/.config/x11/`) above `setbg &`. Example:  
 ```
 xrandr \
   --output HDMI-0 --mode 2560x1440 --rate 240 --primary --pos 0x0 \
   --output DP-0 --mode 2560x1440 --rate 165 --pos 2560x0
 ```
+This information can be easily found by running ```xrandr --query```.
+
+## Dwmblocks
+Volume shows the volume percentage of your current audio device. Left-clicking it will bring up the `pulsemixer` with options to change your audio device and other settings. Middle-clicking the block will mute your audio. You can scroll up and down on the block to raise and lower your volume.
+
+RAM usage will show your current RAM usage as a percentage. Left-clicking it will bring up `btop`. This block is off by default; it can be enabled by uncommenting it in `~/.local/src/dwmblocks/config.h` and recompiling it. Line shown below:
+```
+/* {" ",	"sb-ram",	5,	2}, */
+```
+
+Battery shows your current remaining battery life as a percentage. Left-clicking it will show an estimate until fully discharged or fully charged.
+
+Clock shows the current date and time. Left-clicking it will show a calendar with today's date highlighted.
+
+Networking shows your current connection status. A Wi-Fi connection is shown as its signal strength percentage, a wired connection as `eth`, and if both are active it shows both (for example `72% eth`). If there is no active connection, it shows `off`. Left-clicking it will bring up nmtui, where you can connect to a network, switch networks, or edit your connections.
 
 ## Keybinds
 Common

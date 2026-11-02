@@ -563,9 +563,7 @@ shadow-exclude = [
   "class_g = 'Notify-osd'",
   "_GTK_FRAME_EXTENTS@:c"
 ];
-fading = true;
-fade-in-step = 0.05;
-fade-out-step = 0.05;
+fading = false;
 detect-client-opacity = true;
 mark-wmwin-focused = true;
 mark-ovredir-focused = true;
@@ -575,7 +573,7 @@ detect-client-leader = true;
 log-level = "warn";
 wintypes:
 {
-  tooltip       = { fade = true; shadow = false; opacity = 0.85; focus = true; };
+  tooltip       = { fade = false; shadow = false; opacity = 0.85; focus = true; };
   dropdown_menu = { shadow = false; };
   popup_menu    = { shadow = false; };
   utility       = { shadow = false; };

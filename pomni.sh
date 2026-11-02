@@ -732,15 +732,10 @@ else
 	date '+[%m-%d %H:%M]'
 fi
 EOF
-as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-internet"' <<'EOF'
+as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-network"' <<'EOF'
 #!/bin/sh
 case $BLOCK_BUTTON in
 1) "$TERMINAL" -e nmtui; pkill -RTMIN+4 "${STATUSBAR:-dwmblocks}" ;;
-3) notify-send "internet status" "click: open NetworkManager
-wifi: wireless signal strength (%)
-eth: wired connection
-off: no active connection" ;;
-6) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
 esac
 
 wifi=""

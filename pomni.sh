@@ -559,7 +559,6 @@ shadow-exclude = [
 fading = true;
 fade-in-step = 0.05;
 fade-out-step = 0.05;
-inactive-dim = 0.3;
 detect-client-opacity = true;
 mark-wmwin-focused = true;
 mark-ovredir-focused = true;

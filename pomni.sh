@@ -308,15 +308,15 @@ if whiptail \
 	--title "Extras" \
 	--fullbuttons \
 	--yesno \
-	"Would you like to install extras?\n\n(BTOP, musescore3, qBittorrent, Vesktop)" \
+	"Would you like to install extras?\n\n(musescore3, qBittorrent, Vesktop)" \
 	11 60; then
 	whiptail \
 		--title "Installing" \
 		--infobox \
 		"Setting up extras..." \
 		8 50
-pacman -S --needed --noconfirm qbittorrent fuse2 btop >/dev/null 2>&1 ||
-	die "Failed to install btop and/or qBittorrent."
+pacman -S --needed --noconfirm qbittorrent fuse2 >/dev/null 2>&1 ||
+	die "Failed to install qBittorrent."
 as_user mkdir -p "$home/.config/qBittorrent"
 as_user curl -fsSL \
 	-o "$home/.config/qBittorrent/mocha.qbtheme" \
@@ -781,6 +781,17 @@ echo "[bat:N/A]"
 EOF
 fi
 
+# Extra RAM usage script
+as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-ram"' <<'EOF'
+#!/bin/sh
+case $BLOCK_BUTTON in
+	1) setsid -f "$TERMINAL" -e btop ;;
+esac
+
+awk '/^MemTotal:/ { t = $2 } /^MemAvailable:/ { a = $2 }
+	END { printf "[ram:%.2f%%]\n", (t - a) * 100 / t }' /proc/meminfo
+EOF
+
 # Make blocks runable
 chmod +x "$home"/.local/bin/statusbar/sb-*
 
@@ -962,7 +973,7 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler thunar-archive-plugin file-roller fastfetch xdg-user-dirs >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler thunar-archive-plugin file-roller fastfetch xdg-user-dirs btop >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 
 # Make and pin user directories

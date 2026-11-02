@@ -713,9 +713,24 @@ vol=${vol#Volume: }
 vol=$(awk -v v="$vol" 'BEGIN { printf "%.0f", v * 100 }')
 echo "[vol:$vol%]"
 EOF
-as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'
+sudo -u "$name" sh -c 'cat > "$HOME/.local/bin/statusbar/sb-clock"' <<'EOF'
 #!/bin/sh
-date '+[%m-%d %H:%M]'
+state="${XDG_CACHE_HOME:-$HOME/.cache}/sb-clock-short"
+
+case $BLOCK_BUTTON in
+	1) today=$(date +%e | tr -d ' ')
+	   notify-send -h string:x-dunst-stack-tag:sb-clock \
+		"$(date '+%B %Y')" \
+		"$(cal | sed -e 1d -e "s/\<$today\>/<b><u>&<\/u><\/b>/")" ;;
+	2) mkdir -p "${state%/*}"
+	   if [ -e "$state" ]; then rm -f "$state"; else : > "$state"; fi ;;
+esac
+
+if [ -e "$state" ]; then
+	date '+[%a %b %-d]'
+else
+	date '+[%m-%d %H:%M]'
+fi
 EOF
 as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-internet"' <<'EOF'
 #!/bin/sh

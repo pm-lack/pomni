@@ -541,6 +541,75 @@ done
 ) &
 EOF
 
+# Picom
+as_user mkdir -p "$home/.config/picom"
+as_user sh -c 'cat > "$HOME/.config/picom/picom.conf"' <<'EOF'
+shadow = true;
+shadow-radius = 16;
+shadow-opacity = .5;
+shadow-exclude = [
+  "name = 'Notification'",
+  "class_g = 'Conky'",
+  "class_g ?= 'Notify-osd'",
+  "class_g = 'Cairo-clock'",
+  "_GTK_FRAME_EXTENTS@:c"
+];
+shadow-ignore-shaped = false;
+fading = true;
+fade-in-step = 0.05;
+fade-out-step = 0.05;
+inactive-opacity = 1;
+frame-opacity = 1;
+inactive-opacity-override = false;
+active-opacity = 1;
+inactive-dim = 0.3;
+focus-exclude = [ "class_g = 'Cairo-clock'" ];
+rounded-corners-exclude = [
+  "window_type = 'dock'",
+  "window_type = 'desktop'"
+];
+blur-kern = "3x3box";
+blur-background-exclude = [
+  "window_type = 'dock'",
+  "window_type = 'desktop'",
+  "_GTK_FRAME_EXTENTS@:c"
+];
+backend = "glx";
+dithered-present = false;
+vsync = true;
+dbe = false;
+unredir-if-possible = false;
+mark-wmwin-focused = true;
+mark-ovredir-focused = true;
+detect-rounded-corners = true;
+detect-client-opacity = true;
+use-ewmh-active-win = true;
+detect-transient = true;
+detect-client-leader = true;
+use-damage = true;
+xrender-sync-fence = true;
+log-level = "warn";
+wintypes:
+{
+    tooltip =
+    {
+        # fade: Fade the particular type of windows.
+        fade = true;
+        # shadow: Give those windows shadow
+        shadow = false;
+        # opacity: Default opacity for the type of windows.
+        opacity = 0.85;
+        # focus: Whether to always consider windows of this type focused.
+        focus = true;
+    };
+    dropdown_menu = { shadow = false; };
+    popup_menu    = { shadow = false; };
+    utility       = { shadow = false; };
+};
+glx-no-stencil = true;
+glx-copy-from-front = false;
+EOF
+
 # Fonts
 whiptail \
 	--title "Installing" \

@@ -483,11 +483,18 @@ whiptail \
 	"Setting up X dependencies..." \
 	8 50
 
-pacman -S --needed --noconfirm libxinerama xorg-xbacklight xorg-xrandr xwallpaper libxft xorg-xinit libx11 xorg-xset freetype2 fontconfig harfbuzz xcompmgr openssh >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm libxinerama xorg-xbacklight xorg-xrandr xwallpaper libxft xorg-xinit libx11 xorg-xset freetype2 fontconfig harfbuzz picom openssh >/dev/null 2>&1 ||
 	die "Failed to install X dependencies."
 as_user mkdir -p "$home/.config/x11"
 as_user sh -c 'cat > "$HOME/.config/x11/xinitrc"' <<'EOF'
 #!/bin/sh
+# Picom
+if glxinfo -B 2>/dev/null | grep -qiE 'llvmpipe|softpipe|swrast'; then
+    picom --backend xrender -b
+else
+    picom --backend glx -b
+fi
+
 # Key Repeat / Auto-repeat behavior
 xset r rate 400 32
 xrandr --dpi 96
@@ -529,7 +536,7 @@ EOF
 
 as_user sh -c 'cat > "$HOME/.config/x11/xprofile"' <<'EOF'
 #!/bin/sh
-for program in xcompmgr dunst unclutter pipewire; do
+for program in dunst unclutter pipewire; do
 	pidof -sx "$program" >/dev/null 2>&1 && continue
 	"$program" >/dev/null 2>&1 &
 done

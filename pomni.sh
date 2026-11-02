@@ -578,6 +578,9 @@ wintypes:
   popup_menu    = { shadow = false; };
   utility       = { shadow = false; };
 };
+opacity-rule = [
+  "90:class_g = 'Thunar'"
+];
 EOF
 
 # Fonts

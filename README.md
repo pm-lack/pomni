@@ -36,7 +36,7 @@ This information can be easily found by running ```xrandr --query```.
 ## Dwmblocks
 Volume shows the volume percentage of your current audio device. Left-clicking it will bring up the `pulsemixer` with options to change your audio device and other settings. Middle-clicking the block will mute your audio. You can scroll up and down on the block to raise and lower your volume.
 
-RAM usage will show your current RAM usage as a percentage. Left-clicking it will bring up `btop`. This block is off by default; it can be enabled by uncommenting it in `~/.local/src/dwmblocks/config.h` and recompiling it. Line shown below:
+RAM usage will show your current RAM usage as a percentage. Left-clicking it will bring up `top` sorted by RAM usage. This block is off by default; it can be enabled by uncommenting it in `~/.local/src/dwmblocks/config.h` and recompiling it. Line shown below:
 ```
 /* {" ",	"sb-ram",	5,	2}, */
 ```

@@ -45,7 +45,7 @@ Battery shows your current remaining battery life as a percentage. Left-clicking
 
 Clock shows the current date and time. Left-clicking it will show a calendar with today's date highlighted.
 
-Networking shows your current connection status. A Wi-Fi connection is shown as its signal strength percentage, a wired connection as `eth`, and if both are active it shows both (for example `72% eth`). If there is no active connection, it shows `off`. Left-clicking it will bring up nmtui, where you can connect to a network, switch networks, or edit your connections.
+Networking shows your current connection status. A Wi-Fi connection is shown as its signal strength percentage, a wired connection as `eth`, and if both are active it shows both (for example `72% eth`). If there is no active connection, it shows `off`. Left-clicking it will bring up `nmtui`, where you can connect to a network, switch networks, or edit your connections.
 
 ## Keybinds
 Common

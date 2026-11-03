@@ -797,7 +797,7 @@ fi
 as_user sh -c 'cat > "$HOME/.local/bin/statusbar/sb-ram"' <<'EOF'
 #!/bin/sh
 case $BLOCK_BUTTON in
-	1) setsid -f "$TERMINAL" -e btop ;;
+	1) setsid -f "$TERMINAL" -e top -o %MEM ;;
 esac
 
 awk '/^MemTotal:/ { t = $2 } /^MemAvailable:/ { a = $2 }
@@ -985,7 +985,7 @@ whiptail \
 	"Setting up utilities.\n\nThis may take a while..." \
 	9 50
 
-pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler thunar-archive-plugin file-roller fastfetch xdg-user-dirs btop >/dev/null 2>&1 ||
+pacman -S --needed --noconfirm lf ueberzugpp adw-gtk-theme mousepad vim libnotify dunst nsxiv ffmpeg ffmpegthumbnailer tumbler mpv maim tesseract tesseract-data-eng unclutter xclip thunar tumbler thunar-archive-plugin file-roller fastfetch xdg-user-dirs >/dev/null 2>&1 ||
 	die "Failed to install utilities."
 
 # Make and pin user directories

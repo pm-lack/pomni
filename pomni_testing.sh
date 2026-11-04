@@ -877,19 +877,17 @@ esac
 [ -n "$profile" ] && [ -d "$pdir" ] ||
 	die "Could not locate the LibreWolf profile."
 
-# Waterfall theme
+# Firefox OneLineSafari theme
 GIT_TERMINAL_PROMPT=0 git clone --depth 1 \
-	https://github.com/crambaud/waterfall "$TMPDIR/waterfall" >/dev/null 2>&1 ||
-	die "Failed to clone Waterfall."
+	https://github.com/acpuma/firefoxOneLineSafariTheme \
+	"$TMPDIR/firefoxOneLineSafariTheme" >/dev/null 2>&1 ||
+	die "Failed to clone Firefox OneLineSafari."
 mkdir -p "$pdir/chrome"
-cp "$TMPDIR/waterfall/userChrome.css" "$pdir/chrome/" ||
-	die "Failed to copy the Waterfall theme."
+cp -a "$TMPDIR/firefoxOneLineSafariTheme"/userChrome.{css,js} \
+	"$TMPDIR/firefoxOneLineSafariTheme"/userContent.css \
+	"$pdir/chrome/" ||
+	die "Failed to copy the Firefox OneLineSafari theme."
 chown -R "$name": "$pdir/chrome"
-as_user sed -i \
-	-e '/#forward-button{ display: none !important; }/d' \
-	-e 's|#back-button{|#back-button, #forward-button{|' \
-	"$pdir/chrome/userChrome.css" ||
-	die "Failed to adjust LibreWolf navigation buttons."
 
 # Extensions (sideloaded into the profile)
 mkdir -p "$pdir/extensions"
@@ -969,9 +967,8 @@ as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'
  
 * { border-radius: 0px !important; }
 #alltabs-button { display: none !important; }
-toolbarspring {
-    display: none !important;
-}
+#toolbarspring { display: none !important; }
+#star-button{ display: none !important; }
 EOF
 
 # Fix for extensions not loading on first launch

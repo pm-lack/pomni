@@ -885,6 +885,8 @@ mkdir -p "$pdir/chrome"
 cp -a "$TMPDIR/FirefoxCSS/chrome/." "$pdir/chrome/" ||
 	die "Failed to copy the FirefoxCSS theme."
 chown -R "$name": "$pdir/chrome"
+as_user sed -i 's|--TabsHeight: 36;|--TabsHeight: 30;|' "$pdir/chrome/userChrome.css" ||
+	die "Failed to adjust LibreWolf tab height."
 
 # Extensions (sideloaded into the profile)
 mkdir -p "$pdir/extensions"

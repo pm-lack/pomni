@@ -885,6 +885,11 @@ mkdir -p "$pdir/chrome"
 cp "$TMPDIR/waterfall/userChrome.css" "$pdir/chrome/" ||
 	die "Failed to copy the Waterfall theme."
 chown -R "$name": "$pdir/chrome"
+as_user sed -i \
+	-e '/#forward-button{ display: none !important; }/d' \
+	-e 's|#back-button{|#back-button, #forward-button{|' \
+	"$pdir/chrome/userChrome.css" ||
+	die "Failed to adjust LibreWolf navigation buttons."
 
 # Extensions (sideloaded into the profile)
 mkdir -p "$pdir/extensions"

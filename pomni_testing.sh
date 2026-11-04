@@ -969,6 +969,9 @@ as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'
  
 * { border-radius: 0px !important; }
 #alltabs-button { display: none !important; }
+toolbarspring {
+    display: none !important;
+}
 EOF
 
 # Fix for extensions not loading on first launch

@@ -963,7 +963,6 @@ as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'
 #alltabs-button { display: none !important; }
 #tabs-newtab-button, #new-tab-button { display: none !important; }
 #toolbarspring { display: none !important; }
-#unified-extensions-button { display: none !important; }
 #star-button-box, #page-action-buttons { display: none !important; }
 EOF
 

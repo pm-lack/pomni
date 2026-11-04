@@ -964,15 +964,6 @@ as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'
 #tabs-newtab-button, #new-tab-button { display: none !important; }
 #toolbarspring { display: none !important; }
 #star-button-box, #page-action-buttons { display: none !important; }
-#tabbrowser-tabpanels,
-.browserStack,
-.browserStack > browser {
-    border-radius: 0 !important;
-    clip-path: none !important;
-}
-#tabbrowser-tabpanels { margin-top: 0 !important; }
-#navigator-toolbox { padding-bottom: 0 !important; }
-.browserStack { background-color: transparent !important;}
 EOF
 
 # Fix for extensions not loading on first launch

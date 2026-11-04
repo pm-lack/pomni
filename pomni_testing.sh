@@ -877,13 +877,13 @@ esac
 [ -n "$profile" ] && [ -d "$pdir" ] ||
 	die "Could not locate the LibreWolf profile."
 
-# FirefoxCSS theme
+# Waterfall theme
 GIT_TERMINAL_PROMPT=0 git clone --depth 1 \
-	https://github.com/Bali10050/FirefoxCSS "$TMPDIR/FirefoxCSS" >/dev/null 2>&1 ||
-	die "Failed to clone FirefoxCSS."
+	https://github.com/crambaud/waterfall "$TMPDIR/waterfall" >/dev/null 2>&1 ||
+	die "Failed to clone Waterfall."
 mkdir -p "$pdir/chrome"
-cp -a "$TMPDIR/FirefoxCSS/chrome/." "$pdir/chrome/" ||
-	die "Failed to copy the FirefoxCSS theme."
+cp "$TMPDIR/waterfall/userChrome.css" "$pdir/chrome/" ||
+	die "Failed to copy the Waterfall theme."
 chown -R "$name": "$pdir/chrome"
 
 # Extensions (sideloaded into the profile)
@@ -961,8 +961,6 @@ as_user sh -c 'cat >> "$1/chrome/userChrome.css"' sh "$pdir" <<'EOF'
  
 * { border-radius: 0px !important; }
 #alltabs-button { display: none !important; }
-#tabs-newtab-button, #new-tab-button { display: none !important; }
-#unified-extensions-button { display: none !important; }
 #star-button-box, #page-action-buttons { display: none !important; }
 EOF
 
